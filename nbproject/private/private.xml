@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/model/DB.java</file>
             <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/AddUser.java</file>
-            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/ItemList.java</file>
-            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/ItemOption.java</file>
-            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/Deplete.java</file>
-            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/AddNewItem.java</file>
+            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/model/User.java</file>
+            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/Login.java</file>
         </group>
     </open-files>
 </project-private>

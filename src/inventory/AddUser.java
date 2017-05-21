@@ -5,6 +5,15 @@
  */
 package inventory;
 
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import model.DB;
+import model.User;
+
 /**
  *
  * @author bendrhick
@@ -14,8 +23,13 @@ public class AddUser extends javax.swing.JFrame {
     /**
      * Creates new form AddUser
      */
-    public AddUser() {
+    private static User sessionUser = null;
+    private final JPanel panel = new JPanel();
+    DB db = new DB();
+    public AddUser(User user) throws ClassNotFoundException, SQLException, ParseException {
         initComponents();
+        this.sessionUser = user;
+        db.setLogStatus(user.getEmployeeID(), user.getFullName(), "Add User", "Visit");
     }
 
     /**
@@ -33,9 +47,9 @@ public class AddUser extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtFirstName = new javax.swing.JTextField();
         txtLastName = new javax.swing.JTextField();
-        jCBType = new javax.swing.JComboBox<>();
+        jRoleType = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         txtEmployeeNo = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -54,7 +68,8 @@ public class AddUser extends javax.swing.JFrame {
 
         jLabel4.setText("Type:");
 
-        jCBType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Co-Admin", "Employee" }));
+        jRoleType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrator", "Co-Administrator", "Employee" }));
+        jRoleType.setSelectedIndex(1);
 
         jButton1.setText("Add User");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -63,7 +78,12 @@ public class AddUser extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Cancel");
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Employee No.:");
 
@@ -77,7 +97,7 @@ public class AddUser extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(59, 59, 59)
-                .addComponent(jButton2)
+                .addComponent(btnCancel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(32, 32, 32))
@@ -107,8 +127,8 @@ public class AddUser extends javax.swing.JFrame {
                                 .addComponent(jLabel4))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jCBType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtRetypePassword, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)))
+                                .addComponent(txtRetypePassword, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                .addComponent(jRoleType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jLabel1)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -118,9 +138,7 @@ public class AddUser extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel2))
+                    .addComponent(jLabel2)
                     .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -141,11 +159,11 @@ public class AddUser extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jCBType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jRoleType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnCancel))
                 .addGap(20, 20, 20))
         );
 
@@ -157,9 +175,60 @@ public class AddUser extends javax.swing.JFrame {
         int employeeNo = Integer.parseInt(txtEmployeeNo.getText());
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
-        char[] password = txtPassword.getPassword();
-        char[] retypePassword = txtRetypePassword.getPassword();
+        String password = String.valueOf(txtPassword.getPassword());
+        String role = (String) jRoleType.getSelectedItem();
+        String retypePassword = String.valueOf(txtRetypePassword.getPassword());
+        
+        String fullName = firstName + " " + lastName;
+        if(password.equals(retypePassword)){
+            try {
+                String status = db.registerUser(employeeNo, fullName, role, password);
+                if(status == "Duplicate"){
+                    JOptionPane.showMessageDialog(panel, "Employee ID already registered.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else if(status == "Successful"){
+                    JOptionPane.showMessageDialog(panel, "User Registered", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Add User", "Save");
+                    this.setVisible(false);
+                    UserSection option = new UserSection(this.sessionUser);
+                    option.setTitle("DSL Inventory System | Employees Sections");
+                    option.pack();
+                    option.setLocationRelativeTo(null);
+                    option.setVisible(true);
+                }
+                else{
+                    JOptionPane.showMessageDialog(panel, "System Error. Contact System Administrator", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddUser.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(AddUser.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(AddUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(panel, "Passwords entered are not equal.", "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        try {
+            // TODO add your handling code here:
+            this.setVisible(false);
+            UserSection option = new UserSection(this.sessionUser);
+            option.setTitle("DSL Inventory System | Employees Sections");
+            option.pack();
+            option.setLocationRelativeTo(null);
+            option.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddUser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddUser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(AddUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -197,9 +266,8 @@ public class AddUser extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jCBType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -207,6 +275,7 @@ public class AddUser extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JComboBox<String> jRoleType;
     private javax.swing.JTextField txtEmployeeNo;
     private javax.swing.JTextField txtFirstName;
     private javax.swing.JTextField txtLastName;

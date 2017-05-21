@@ -10,31 +10,43 @@ package model;
  * @author L R E
  */
 public class User {
-    private static int employeeID;
-    private static  String fullName;
-    private static String role;
+    private int employeeID;
+    private String fullName;
+    private String role;
+    private String password;
+    
 
-    public static int getEmployeeID() {
+    public int getEmployeeID() {
         return employeeID;
     }
 
-    public static void setEmployeeID(int employeeID) {
-        User.employeeID = employeeID;
+    public void setEmployeeID(int employeeID) {
+        this.employeeID = employeeID;
     }
 
-    public static String getFullName() {
+    public String getFullName() {
         return fullName;
     }
 
-    public static void setFullName(String fullName) {
-        User.fullName = fullName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public static String getRole() {
+    public String getRole() {
         return role;
     }
 
-    public static void setRole(String role) {
-        User.role = role;
+    public void setRole(String role) {
+        this.role = role;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    
 }

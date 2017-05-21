@@ -5,6 +5,13 @@
  */
 package inventory;
 
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.DB;
+import model.User;
+
 /**
  *
  * @author bendrhick
@@ -14,8 +21,12 @@ public class MainMenu extends javax.swing.JFrame {
     /**
      * Creates new form MainMenu
      */
-    public MainMenu() {
+    private static User sessionUser = null;
+    DB db = new DB();
+    public MainMenu(User user) throws ClassNotFoundException, SQLException, ParseException {
         initComponents();
+        this.sessionUser = user;
+        db.setLogStatus(user.getEmployeeID(), user.getFullName(), "Main Menu", "Visit");
     }
 
     /**
@@ -41,6 +52,11 @@ public class MainMenu extends javax.swing.JFrame {
         btnLogout.setText("Log Out");
 
         btnUser.setText("User");
+        btnUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserActionPerformed(evt);
+            }
+        });
 
         btnInventoryOverview.setText("Inventory Overview");
 
@@ -85,12 +101,27 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void btnItemOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemOptionActionPerformed
         // TODO add your handling code here:
-        ItemOption option = new ItemOption();
+        ItemOption option = new ItemOption(this.sessionUser);
         option.setTitle("DSL Inventory System | Item Option");
         option.pack();
         option.setLocationRelativeTo(null);
         option.setVisible(true);
     }//GEN-LAST:event_btnItemOptionActionPerformed
+
+    private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
+        try {
+            // TODO add your handling code here:
+            UserSection option = new UserSection(this.sessionUser);
+            option.setTitle("DSL Inventory System | Employees Sections");
+            option.pack();
+            option.setLocationRelativeTo(null);
+            option.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUserActionPerformed
 
     /**
      * @param args the command line arguments

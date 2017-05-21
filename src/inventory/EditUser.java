@@ -5,6 +5,18 @@
  */
 package inventory;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import model.DB;
+import model.User;
+
 /**
  *
  * @author bendrhick
@@ -14,10 +26,34 @@ public class EditUser extends javax.swing.JFrame {
     /**
      * Creates new form EditUser
      */
-    public EditUser() {
+    private static User sessionUser = null;
+    private final JPanel panel = new JPanel();
+    private static int modifyID = 0;
+    DB db = new DB();
+    public EditUser(User user, int employeeID) throws ClassNotFoundException, SQLException, IOException, ParseException {
         initComponents();
+        this.sessionUser = user;
+        this.modifyID = employeeID;
+        this.setEditableFields(employeeID);
+        db.setLogStatus(user.getEmployeeID(), user.getFullName(), "Edit User", "Visit");
     }
-
+    public void setEditableFields(int employeeID) throws ClassNotFoundException, SQLException, IOException{
+        String roles[] = new String[] {"Administrator", "Co-Administrator", "Employee"};
+        User user = new User();
+        user =  db.getUserDetails(employeeID);
+        String[] name = user.getFullName().split(" ");
+        txtEmployeeID.setText(Integer.toString(user.getEmployeeID()));
+        txtFirstName.setText(name[0]);
+        txtLastName.setText(name[1]);
+        txtPassword.setText(user.getPassword());
+        jRoleType.setSelectedIndex(Arrays.asList(roles).indexOf(user.getRole()));
+        txtRetypePassword.setText(user.getPassword());
+        
+        if(user.getEmployeeID() == this.sessionUser.getEmployeeID()){
+            btnDeleteUser.setVisible(false);
+        }
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,14 +72,15 @@ public class EditUser extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        txtFirstName = new javax.swing.JTextField();
+        jRoleType = new javax.swing.JComboBox<>();
+        txtEmployeeID = new javax.swing.JTextField();
+        txtLastName = new javax.swing.JTextField();
+        btnSave = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        txtPassword = new javax.swing.JPasswordField();
+        txtRetypePassword = new javax.swing.JPasswordField();
+        btnDeleteUser = new javax.swing.JButton();
 
         jLabel7.setText("jLabel7");
 
@@ -66,66 +103,88 @@ public class EditUser extends javax.swing.JFrame {
 
         jLabel8.setText("Re-enter Password:");
 
-        jTextField1.setText("jTextField1");
+        jRoleType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrator", "Co-Administrator", "Employee" }));
+        jRoleType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRoleTypeActionPerformed(evt);
+            }
+        });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Co-Admin", "Employee" }));
+        txtEmployeeID.setEnabled(false);
 
-        jTextField2.setText("jTextField2");
+        btnSave.setBackground(new java.awt.Color(0, 255, 0));
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
-        jTextField3.setText("jTextField3");
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
-        jTextField5.setText("jTextField5");
-
-        jTextField6.setText("jTextField6");
-
-        jButton1.setText("Save");
-
-        jButton2.setText("Cancel");
+        btnDeleteUser.setBackground(new java.awt.Color(255, 0, 0));
+        btnDeleteUser.setText("Delete");
+        btnDeleteUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteUserActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                .addGap(12, 12, 12)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(132, 132, 132)
                         .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                            .addComponent(jTextField3)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(108, 108, 108)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtEmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addComponent(btnCancel)
+                                .addGap(66, 66, 66)
+                                .addComponent(btnDeleteUser)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtFirstName, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jRoleType, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtRetypePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,73 +194,142 @@ public class EditUser extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRoleType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtEmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtRetypePassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnSave)
+                    .addComponent(btnCancel)
+                    .addComponent(btnDeleteUser))
                 .addGap(0, 30, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+            // TODO add your handling code here:
+            this.setVisible(false);
+            UserSection option = new UserSection(this.sessionUser);
+            option.setTitle("DSL Inventory System | Employees Sections");
+            option.pack();
+            option.setLocationRelativeTo(null);
+            option.setVisible(true);
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        
+    }//GEN-LAST:event_btnCancelActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EditUser().setVisible(true);
+    private void jRoleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRoleTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRoleTypeActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        int employeeNo = Integer.parseInt(txtEmployeeID.getText());
+        String firstName = txtFirstName.getText();
+        String lastName = txtLastName.getText();
+        String password = String.valueOf(txtPassword.getPassword());
+        String role = (String) jRoleType.getSelectedItem();
+        String retypePassword = String.valueOf(txtRetypePassword.getPassword());
+        
+        String fullName = firstName + " " + lastName;
+        if(password.equals(retypePassword)){
+            try {
+                DB db = new DB();
+                String status = db.updateUser(employeeNo, fullName, role, password);
+                if(status == "Successful"){
+                    JOptionPane.showMessageDialog(panel, "User Updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Edit User Page", "Edit");
+                    this.setVisible(false);
+                    UserSection option = new UserSection(this.sessionUser);
+                    option.setTitle("DSL Inventory System | Employees Sections");
+                    option.pack();
+                    option.setLocationRelativeTo(null);
+                    option.setVisible(true);
+                }
+                else{
+                    JOptionPane.showMessageDialog(panel, "System Error. Contact System Administrator", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddUser.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(AddUser.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
-    }
+        }
+        else{
+            JOptionPane.showMessageDialog(panel, "Passwords entered are not equal.", "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
+        Object[] options = {"Yes, Delete it","No"};
+        int n = JOptionPane.showOptionDialog(null,
+                    "Deletion Prompt",
+                    "Are you sure you want to delete it?",
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.DEFAULT_OPTION,
+                    null,
+                    options,
+                    options[1]);
+        if(n == 0){
+            try {
+                DB db = new DB();
+                String status = db.deleteUser(modifyID);
+                if(status == "Successful"){
+                    JOptionPane.showMessageDialog(panel, "User Deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Edit User Page", "Delete");
+                }
+                else{
+                    JOptionPane.showMessageDialog(panel, "System Error.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
+                this.setVisible(false);
+                UserSection option = new UserSection(this.sessionUser);
+                option.setTitle("DSL Inventory System | Employees Sections");
+                option.pack();
+                option.setLocationRelativeTo(null);
+                option.setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else{
+
+        }
+    }//GEN-LAST:event_btnDeleteUserActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnDeleteUser;
+    private javax.swing.JButton btnSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -210,11 +338,12 @@ public class EditUser extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JComboBox<String> jRoleType;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField txtEmployeeID;
+    private javax.swing.JTextField txtFirstName;
+    private javax.swing.JTextField txtLastName;
+    private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JPasswordField txtRetypePassword;
     // End of variables declaration//GEN-END:variables
 }
