@@ -188,4 +188,115 @@ public class DB {
         int rows = ps.executeUpdate();
         c.close();
     }
+
+    public String addItem(String ac, String batchNo, String colorTemp, String cri, String dc, String image, String information, String ipRate, String itemNo, String kelvin,
+            String locationNo, String lumens, String power, String productName, String rackNo, String remarks,
+            String rowNo, String size, int threshold, String wattage, String beamAngle, String productionDate) throws ClassNotFoundException, SQLException {
+        Connection c = connect();
+        int itemID = Integer.parseInt(itemNo);
+        PreparedStatement ps = c.prepareStatement("INSERT INTO items (item_id, product_name, information, ip_rate, kelvin, beam_angle, wattage,"+
+                " color_temp, batch_no, row_no, rack_no, location_no, minimum_quantity, production_date, lumens, cri, power, size, ac, dc, remark"+
+                ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        
+        ps.setInt(1, itemID);
+        ps.setString(2, productName);
+        ps.setString(3, information);
+        ps.setString(4, ipRate);
+        ps.setString(5, kelvin);
+        ps.setString(6, beamAngle);
+        ps.setString(7, wattage);
+        ps.setString(8, colorTemp);
+        ps.setString(9, batchNo);
+        ps.setString(10, rowNo);
+        ps.setString(11, rackNo);
+        ps.setString(12, locationNo);
+        ps.setInt(13, threshold);
+        ps.setString(14, productionDate);
+        ps.setString(15, lumens);
+        ps.setString(16, cri);
+        ps.setString(17, power);
+        ps.setString(18, size);
+        ps.setString(19, ac);
+        ps.setString(20, dc);
+        ps.setString(21, remarks);
+        
+        
+        int rows = ps.executeUpdate();
+        if(rows > 0){
+            return "Successful";
+        }
+        else{
+            return "Failed";
+        }
+    }
+    
+    public static List<Item> getItems() throws ClassNotFoundException, SQLException{
+        List<Item> items = new ArrayList<Item>();
+        Connection c = connect();
+        
+        PreparedStatement ps = c.prepareStatement("Select * from items");
+        ResultSet rs = ps.executeQuery();
+        
+        while(rs.next()){
+            Item item = new Item();
+            item.setItemNo(Integer.toString(rs.getInt(2)));
+            item.setProductName(rs.getString(3));
+            item.setInformation(rs.getString(4));
+            item.setIpRate(rs.getString(5));
+            item.setKelvin(rs.getString(6));
+            item.setBeamAngle(rs.getString(7));
+            item.setWattage(rs.getString(8));
+            item.setColorTemp(rs.getString(9));
+            item.setBatchNo(rs.getString(10));
+            item.setRowNo(rs.getString(11));
+            item.setRackNo(rs.getString(12));
+            item.setLocationNo(rs.getString(13));
+            item.setThreshold(rs.getInt(14));
+            item.setProductionDate(rs.getString(15));
+            item.setLumens(rs.getString(16));
+            item.setCri(rs.getString(17));
+            item.setPower(rs.getString(18));
+            item.setSize(rs.getString(19));
+            item.setAc(rs.getString(20));
+            item.setDc(rs.getString(21));
+            item.setRemarks(rs.getString(22));
+            
+            items.add(item);
+            
+        }
+        c.close();
+        return items;
+    }
+    public static Item getItemDetails(int itemID) throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("Select * from items where item_id = ?");
+        ps.setInt(1, itemID);
+        ResultSet rs = ps.executeQuery();
+        Item item = new Item();
+        while(rs.next()){
+            item.setItemNo(Integer.toString(rs.getInt(2)));
+            item.setProductName(rs.getString(3));
+            item.setInformation(rs.getString(4));
+            item.setIpRate(rs.getString(5));
+            item.setKelvin(rs.getString(6));
+            item.setBeamAngle(rs.getString(7));
+            item.setWattage(rs.getString(8));
+            item.setColorTemp(rs.getString(9));
+            item.setBatchNo(rs.getString(10));
+            item.setRowNo(rs.getString(11));
+            item.setRackNo(rs.getString(12));
+            item.setLocationNo(rs.getString(13));
+            item.setThreshold(rs.getInt(14));
+            item.setProductionDate(rs.getString(15));
+            item.setLumens(rs.getString(16));
+            item.setCri(rs.getString(17));
+            item.setPower(rs.getString(18));
+            item.setSize(rs.getString(19));
+            item.setAc(rs.getString(20));
+            item.setDc(rs.getString(21));
+            item.setRemarks(rs.getString(22));
+        }
+        c.close();
+        return item;
+    }
 }

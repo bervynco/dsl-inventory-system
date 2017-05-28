@@ -5,6 +5,15 @@
  */
 package inventory;
 
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import model.DB;
+import model.User;
+
 /**
  *
  * @author bendrhick
@@ -14,8 +23,12 @@ public class AddNewItem extends javax.swing.JFrame {
     /**
      * Creates new form AddNewItem
      */
-    public AddNewItem() {
+    private static User sessionUser = null;
+    private final JPanel panel = new JPanel();
+    DB db = new DB();
+    public AddNewItem(User user) {
         initComponents();
+        this.sessionUser = user;
     }
 
     /**
@@ -71,30 +84,28 @@ public class AddNewItem extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         txtBatchNo = new javax.swing.JTextField();
         jLabel25 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
         jLabel27 = new javax.swing.JLabel();
         txtThreshold = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtRemarks = new javax.swing.JTextArea();
-        datePicker1 = new com.github.lgooddatepicker.components.DatePicker();
+        dpProductionDate = new com.github.lgooddatepicker.components.DatePicker();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setText("Add Item");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Item No.:");
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Information:");
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("IP Rate:");
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel7.setText("Product Name:");
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         btnAddItem.setText("Add Item");
         btnAddItem.addActionListener(new java.awt.event.ActionListener() {
@@ -105,64 +116,59 @@ public class AddNewItem extends javax.swing.JFrame {
 
         btnCancel.setText("Cancel");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Production Date:");
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("Color Temp:");
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel9.setText("Image:");
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel10.setText("Kelvin:");
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel11.setText("CRI:");
+        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel12.setText("Beam Angle:");
+        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel13.setText("Power(Volts):");
+        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel14.setText("Wattage:");
+        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel15.setText("Size:");
+        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel16.setText("Lumens:");
+        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel17.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel17.setText("AC:");
+        jLabel17.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel18.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel18.setText("DC:");
+        jLabel18.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel20.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel20.setText("Row No.:");
+        jLabel20.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel21.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel21.setText("Rack No.:");
+        jLabel21.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel22.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel22.setText("Location No.:");
+        jLabel22.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel24.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel24.setText("Batch No.:");
+        jLabel24.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel25.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel25.setText("Remarks:");
+        jLabel25.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel26.setText("Barcode:");
-
-        jButton3.setText("Generate");
-
-        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel27.setText("Threshold");
+        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         txtRemarks.setColumns(20);
         txtRemarks.setRows(5);
@@ -172,137 +178,131 @@ public class AddNewItem extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel23)
+                .addGap(813, 813, 813))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel23)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel26)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(61, 61, 61))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(61, 61, 61))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(30, 30, 30)
+                                        .addComponent(jLabel2)
+                                        .addGap(26, 26, 26))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGap(30, 30, 30)
-                                                .addComponent(jLabel2)
-                                                .addGap(26, 26, 26))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel7)
-                                                .addGap(21, 21, 21)))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txtProductName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtItemNo, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel12))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addGap(23, 23, 23)
-                                                    .addComponent(jLabel4))
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                    .addContainerGap()
-                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))))
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(txtInformation, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addGap(24, 24, 24)
-                                                    .addComponent(txtKelvin, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(0, 0, Short.MAX_VALUE))))
+                                        .addComponent(jLabel7)
+                                        .addGap(21, 21, 21)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtProductName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtItemNo, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel12))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jLabel14)
-                                                .addComponent(jLabel8)
-                                                .addComponent(jLabel20)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel27)
-                                                    .addComponent(jLabel24)))
-                                            .addGap(29, 29, 29)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(txtRowNo, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                                                .addComponent(txtBatchNo)
-                                                .addComponent(txtWattage)
-                                                .addComponent(txtColorTemp)
-                                                .addComponent(txtBeamAngle)
-                                                .addComponent(txtThreshold)))
-                                        .addComponent(txtIpRate, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(120, 120, 120)))
+                                            .addGap(23, 23, 23)
+                                            .addComponent(jLabel4))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(txtInformation, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGap(24, 24, 24)
+                                            .addComponent(txtKelvin, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel14)
+                                        .addComponent(jLabel8)
+                                        .addComponent(jLabel20)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel27)
+                                            .addComponent(jLabel24)))
+                                    .addGap(29, 29, 29)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtRowNo, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                                        .addComponent(txtBatchNo)
+                                        .addComponent(txtWattage)
+                                        .addComponent(txtColorTemp)
+                                        .addComponent(txtBeamAngle)
+                                        .addComponent(txtThreshold)))
+                                .addComponent(txtIpRate, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(120, 120, 120)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addGap(18, 18, 18)
+                            .addComponent(dpProductionDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(151, 151, 151))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(46, 46, 46)
+                                .addComponent(jLabel9)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtImage))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(36, 36, 36)
+                                .addComponent(jLabel16)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtLumens, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(datePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(151, 151, 151))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addGap(46, 46, 46)
-                                        .addComponent(jLabel9)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtImage))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addGap(36, 36, 36)
-                                        .addComponent(jLabel16)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtLumens, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(5, 5, 5)
+                                        .addGap(11, 11, 11)
+                                        .addComponent(jLabel13))
+                                    .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addGap(11, 11, 11)
-                                                .addComponent(jLabel13))
-                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(56, 56, 56)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addGap(56, 56, 56)
-                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)))
-                                                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
-                                                .addGap(18, 18, 18)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                    .addComponent(txtPower, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-                                                    .addComponent(txtSize, javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(txtAc, javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(txtDc)
-                                                    .addComponent(txtCri)))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(jLabel21)
-                                                    .addComponent(jLabel22)
-                                                    .addComponent(jLabel25))
-                                                .addGap(18, 18, 18)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(txtRackNo, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(txtLocationNo, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                                    .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(txtPower, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                                            .addComponent(txtSize, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtAc, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtDc)
+                                            .addComponent(txtCri)))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(70, 70, 70)
-                                        .addComponent(btnAddItem)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel21)
+                                            .addComponent(jLabel22)
+                                            .addComponent(jLabel25))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtRackNo, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtLocationNo, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(70, 70, 70)
+                                .addComponent(btnAddItem)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -314,7 +314,7 @@ public class AddNewItem extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtItemNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(datePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dpProductionDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -380,11 +380,12 @@ public class AddNewItem extends javax.swing.JFrame {
                             .addComponent(jLabel22)
                             .addComponent(txtLocationNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20)
-                    .addComponent(txtRowNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtRackNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel21))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel20)
+                        .addComponent(txtRowNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel21)))
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -394,11 +395,7 @@ public class AddNewItem extends javax.swing.JFrame {
                             .addComponent(txtThreshold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel23)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel26)
-                            .addComponent(jButton3))
-                        .addGap(0, 72, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
@@ -412,70 +409,64 @@ public class AddNewItem extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemActionPerformed
-        // TODO add your handling code here:
-        String ac = txtAc.getText();
-        String batchNo = txtBatchNo.getText();
-        String beamAngle = txtBeamAngle.getText();
-        String colorTemp = txtColorTemp.getText();
-        String cri = txtCri.getText();
-        String dc = txtDc.getText();
-        String image = txtImage.getText();
-        String information = txtInformation.getText();
-        String ipRate = txtIpRate.getText();
-        String itemNo = txtItemNo.getText();
-        String kelvin = txtKelvin.getText();
-        String locationNo = txtLocationNo.getText();
-        String lumens = txtLumens.getText();
-        String power = txtPower.getText();
-        String productName = txtProductName.getText();
-        String rackNo = txtRackNo.getText();
-        String remarks = txtRemarks.getText();
-        String rowNo = txtRowNo.getText();
-        String size = txtSize.getText();
-        String threshold = txtThreshold.getText();
-        String wattage = txtWattage.getText();
+        try {
+            // TODO add your handling code here:
+            String ac = txtAc.getText();
+            String batchNo = txtBatchNo.getText();
+            String beamAngle = txtBeamAngle.getText();
+            String colorTemp = txtColorTemp.getText();
+            String cri = txtCri.getText();
+            String dc = txtDc.getText();
+            String image = txtImage.getText();
+            String information = txtInformation.getText();
+            String ipRate = txtIpRate.getText();
+            String itemNo = txtItemNo.getText();
+            String kelvin = txtKelvin.getText();
+            String locationNo = txtLocationNo.getText();
+            String lumens = txtLumens.getText();
+            String power = txtPower.getText();
+            String productName = txtProductName.getText();
+            String rackNo = txtRackNo.getText();
+            String remarks = txtRemarks.getText();
+            String rowNo = txtRowNo.getText();
+            String size = txtSize.getText();
+            int threshold = Integer.parseInt(txtThreshold.getText());
+            String productionDate = dpProductionDate.getDateStringOrEmptyString();
+            String wattage = txtWattage.getText();
+            String status = db.addItem(ac, batchNo, colorTemp, cri, dc, image, information, ipRate, itemNo, kelvin, locationNo, lumens,
+                    power, productName, rackNo, remarks, rowNo, size, threshold, wattage, beamAngle, productionDate);
+        
+            if(status == "Successful"){
+                JOptionPane.showMessageDialog(panel, "Item Added", "Success", JOptionPane.INFORMATION_MESSAGE);
+                db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Add User", "Save");
+                this.setVisible(false);
+                ItemOption option = new ItemOption(this.sessionUser);
+                option.setTitle("DSL Inventory System | Item Option");
+                option.pack();
+                option.setLocationRelativeTo(null);
+                option.setVisible(true);
+            }
+            else{
+                JOptionPane.showMessageDialog(panel, "System Error. Contact System Administrator", "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddNewItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddNewItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(AddNewItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnAddItemActionPerformed
 
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(AddNewItem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(AddNewItem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(AddNewItem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(AddNewItem.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new AddNewItem().setVisible(true);
-//            }
-//        });
-//    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddItem;
     private javax.swing.JButton btnCancel;
-    private com.github.lgooddatepicker.components.DatePicker datePicker1;
-    private javax.swing.JButton jButton3;
+    private com.github.lgooddatepicker.components.DatePicker dpProductionDate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -493,7 +484,6 @@ public class AddNewItem extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

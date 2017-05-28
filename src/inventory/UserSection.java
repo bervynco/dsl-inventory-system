@@ -157,13 +157,21 @@ public class UserSection extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUserActionPerformed
-        // TODO add your handling code here:
-        this.setVisible(false);
-        AddUser add = new AddUser(this.sessionUser);
-        add.setTitle("DSL Inventory System | Employees Sections");
-        add.pack();
-        add.setLocationRelativeTo(null);
-        add.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            this.setVisible(false);
+            AddUser add = new AddUser(this.sessionUser);
+            add.setTitle("DSL Inventory System | Employees Sections");
+            add.pack();
+            add.setLocationRelativeTo(null);
+            add.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserSection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserSection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(UserSection.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnAddUserActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -202,6 +210,8 @@ public class UserSection extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(UserSection.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(UserSection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
             Logger.getLogger(UserSection.class.getName()).log(Level.SEVERE, null, ex);
         }
         

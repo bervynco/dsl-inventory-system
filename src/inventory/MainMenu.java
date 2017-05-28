@@ -59,6 +59,11 @@ public class MainMenu extends javax.swing.JFrame {
         });
 
         btnInventoryOverview.setText("Inventory Overview");
+        btnInventoryOverview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInventoryOverviewActionPerformed(evt);
+            }
+        });
 
         btnItemOption.setText("Item Option");
         btnItemOption.addActionListener(new java.awt.event.ActionListener() {
@@ -100,7 +105,7 @@ public class MainMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnItemOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemOptionActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
         ItemOption option = new ItemOption(this.sessionUser);
         option.setTitle("DSL Inventory System | Item Option");
         option.pack();
@@ -110,7 +115,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
         try {
-            // TODO add your handling code here:
+            this.setVisible(false);
             UserSection option = new UserSection(this.sessionUser);
             option.setTitle("DSL Inventory System | Employees Sections");
             option.pack();
@@ -120,8 +125,26 @@ public class MainMenu extends javax.swing.JFrame {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnUserActionPerformed
+
+    private void btnInventoryOverviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventoryOverviewActionPerformed
+        try {
+            // TODO add your handling code here:
+            this.setVisible(false);
+            InventoryOverview option = new InventoryOverview(this.sessionUser, "");
+            option.setTitle("DSL Inventory System | Inventory");
+            option.pack();
+            option.setLocationRelativeTo(null);
+            option.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnInventoryOverviewActionPerformed
 
     /**
      * @param args the command line arguments

@@ -30,8 +30,9 @@ public class Item {
     private static String remarks;
     private static String rowNo;
     private static String size;
-    private static String threshold;
+    private static int threshold;
     private static String wattage;
+    private static String productionDate;
 
     public static int getItemID() {
         return itemID;
@@ -193,11 +194,11 @@ public class Item {
         Item.size = size;
     }
 
-    public static String getThreshold() {
+    public static int getThreshold() {
         return threshold;
     }
 
-    public static void setThreshold(String threshold) {
+    public static void setThreshold(int threshold) {
         Item.threshold = threshold;
     }
 
@@ -207,6 +208,14 @@ public class Item {
 
     public static void setWattage(String wattage) {
         Item.wattage = wattage;
+    }
+
+    public static String getProductionDate() {
+        return productionDate;
+    }
+
+    public static void setProductionDate(String productionDate) {
+        Item.productionDate = productionDate;
     }
     
     

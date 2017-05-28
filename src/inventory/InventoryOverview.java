@@ -5,6 +5,17 @@
  */
 package inventory;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import model.DB;
+import model.Item;
+import model.User;
+
 /**
  *
  * @author bendrhick
@@ -14,8 +25,78 @@ public class InventoryOverview extends javax.swing.JFrame {
     /**
      * Creates new form InventoryOverview
      */
-    public InventoryOverview() {
+    private static User sessionUser = null;
+    private static String action = null;
+    private static int itemCount = 0;
+    DB db = new DB();
+    private static DefaultTableModel FillTable() throws ClassNotFoundException, SQLException {
+        DefaultTableModel model = new DefaultTableModel();
+        
+        List<Item> items = new ArrayList<Item>();
+        DB db = new DB();
+        items = db.getItems();
+        
+        model.addColumn("Item No");
+        model.addColumn("Product Name");
+        model.addColumn("Information");
+        model.addColumn("IP Rate");
+        model.addColumn("Kelvin");
+        model.addColumn("Beam Angle");
+        model.addColumn("Wattage");
+        model.addColumn("Color Temp");
+        model.addColumn("Batch No");
+        model.addColumn("Row No");
+        model.addColumn("Rack No");
+        model.addColumn("Location No");
+        model.addColumn("Threshold");
+        model.addColumn("Production Date");
+        model.addColumn("Lumens");
+        model.addColumn("Cri");
+        model.addColumn("Power");
+        model.addColumn("Size");
+        model.addColumn("AC");
+        model.addColumn("DC");
+        model.addColumn("Remarks");
+        
+        itemCount = items.size();
+        
+        for(int i = 0; i < items.size(); i++){
+            Object [] rowData = {
+                items.get(i).getItemNo(),
+                items.get(i).getProductName(),
+                items.get(i).getInformation(),
+                items.get(i).getIpRate(),
+                items.get(i).getKelvin(),
+                items.get(i).getBeamAngle(),
+                items.get(i).getWattage(),
+                items.get(i).getColorTemp(),
+                items.get(i).getBatchNo(),
+                items.get(i).getRowNo(),
+                items.get(i).getRackNo(),
+                items.get(i).getLocationNo(),
+                items.get(i).getThreshold(),
+                items.get(i).getProductionDate(),
+                items.get(i).getLumens(),
+                items.get(i).getCri(),
+                items.get(i).getPower(),
+                items.get(i).getSize(),
+                items.get(i).getAc(),
+                items.get(i).getDc(),
+                items.get(i).getRemarks()
+            };
+            model.addRow(rowData);
+        }
+       
+        return model;
+    }
+    
+    public InventoryOverview(User user, String action) throws ClassNotFoundException, SQLException {
         initComponents();
+        this.sessionUser = user;
+        this.action = action;
+        DefaultTableModel model = InventoryOverview.FillTable();
+        
+        tableInventory.setModel(model);
     }
 
     /**
@@ -31,7 +112,7 @@ public class InventoryOverview extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableInventory = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -42,7 +123,7 @@ public class InventoryOverview extends javax.swing.JFrame {
 
         jTextField1.setText("jTextField1");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableInventory.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null, null, null, null},
@@ -96,7 +177,7 @@ public class InventoryOverview extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Item No.", "Product Name", "Last Restock", "Wattage", "Quantity", "Unit", "Row No.", "Rack No.", "Location No.", "No. of Batch", "Remarks"
+
             }
         ) {
             Class[] types = new Class [] {
@@ -114,9 +195,14 @@ public class InventoryOverview extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jTable1.setGridColor(new java.awt.Color(0, 102, 102));
-        jScrollPane1.setViewportView(jTable1);
+        tableInventory.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tableInventory.setGridColor(new java.awt.Color(0, 102, 102));
+        tableInventory.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableInventoryMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableInventory);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -150,46 +236,72 @@ public class InventoryOverview extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+    private void tableInventoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableInventoryMouseClicked
+        // TODO add your handling code here:
+        int row = tableInventory.rowAtPoint(evt.getPoint());
+        int itemID = Integer.parseInt((String) tableInventory.getValueAt(row, 0));
+        this.setVisible(false);
+        if(this.action == "Edit"){
+            try {
+                EditItem editItem = new EditItem(this.sessionUser, "Edit");
+                editItem.setEditableFields(itemID);
+                editItem.setTitle("DSL Inventory System | Edit Item");
+                editItem.pack();
+                editItem.setLocationRelativeTo(null);
+                editItem.setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(InventoryOverview.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(InventoryOverview.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(InventoryOverview.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InventoryOverview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InventoryOverview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InventoryOverview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InventoryOverview.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new InventoryOverview().setVisible(true);
+        else if(this.action == "Delete"){
+            try {
+                EditItem editItem = new EditItem(this.sessionUser, "Delete");
+                editItem.setEditableFields(itemID);
+                editItem.setTitle("DSL Inventory System | Edit Item");
+                editItem.pack();
+                editItem.setLocationRelativeTo(null);
+                editItem.setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(InventoryOverview.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(InventoryOverview.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(InventoryOverview.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
-    }
+        }
+        else if(this.action == "Replenish"){
+            Replenish replenish = new Replenish(this.sessionUser);
+            replenish.setTitle("DSL Inventory System | Replenish Stock");
+            replenish.pack();
+            replenish.setLocationRelativeTo(null);
+            replenish.setVisible(true);
+        }
+        else if(this.action == "Deplete"){
+            Deplete deplete = new Deplete(this.sessionUser);
+            deplete.setTitle("DSL Inventory System | Deplete Stock");
+            deplete.pack();
+            deplete.setLocationRelativeTo(null);
+            deplete.setVisible(true);
+        }
+        else{
+            EditItem editItem = new EditItem(this.sessionUser, "All");
+            editItem.setTitle("DSL Inventory System | Edit Item");
+            editItem.pack();
+            editItem.setLocationRelativeTo(null);
+            editItem.setVisible(true);
+        }
+    }//GEN-LAST:event_tableInventoryMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tableInventory;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,6 +5,10 @@
  */
 package inventory;
 
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.User;
 
 /**
@@ -58,6 +62,11 @@ public class ItemOption extends javax.swing.JFrame {
 
         btnDeleteItem.setBackground(new java.awt.Color(255, 51, 0));
         btnDeleteItem.setText("Delete Item");
+        btnDeleteItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteItemActionPerformed(evt);
+            }
+        });
 
         btnReplenishStock.setText("Replenish Stock");
         btnReplenishStock.addActionListener(new java.awt.event.ActionListener() {
@@ -142,12 +151,20 @@ public class ItemOption extends javax.swing.JFrame {
 
     private void btnMainMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainMenuActionPerformed
 
-        this.setVisible(false);
-        MainMenu menu = new MainMenu(this.sessionUser);
-        menu.setTitle("DSL Inventory System | Main Menu");
-        menu.pack();
-        menu.setLocationRelativeTo(null);
-        menu.setVisible(true);
+        try {
+            this.setVisible(false);
+            MainMenu menu = new MainMenu(this.sessionUser);
+            menu.setTitle("DSL Inventory System | Main Menu");
+            menu.pack();
+            menu.setLocationRelativeTo(null);
+            menu.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnMainMenuActionPerformed
 
     private void btnAddNewItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewItemActionPerformed
@@ -161,33 +178,105 @@ public class ItemOption extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddNewItemActionPerformed
 
     private void btnEditItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditItemActionPerformed
-        // TODO add your handling code here:
-        this.setVisible(false);
-        EditItem editItem = new EditItem(this.sessionUser);
-        editItem.setTitle("DSL Inventory System | Edit Item");
-        editItem.pack();
-        editItem.setLocationRelativeTo(null);
-        editItem.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            InventoryOverview io = new InventoryOverview(this.sessionUser, "Edit");
+            io.setTitle("DSL Inventory System | List of Items");
+            io.pack();
+            io.setLocationRelativeTo(null);
+            io.setVisible(true);
+//        this.setVisible(false);
+//        EditItem editItem = new EditItem(this.sessionUser);
+//        editItem.setTitle("DSL Inventory System | Edit Item");
+//        editItem.pack();
+//        editItem.setLocationRelativeTo(null);
+//        editItem.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnEditItemActionPerformed
 
     private void btnReplenishStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplenishStockActionPerformed
-        // TODO add your handling code here:this.setVisible(false);
-        Replenish replenish = new Replenish(this.sessionUser);
-        replenish.setTitle("DSL Inventory System | Replenish Stock");
-        replenish.pack();
-        replenish.setLocationRelativeTo(null);
-        replenish.setVisible(true);
+        // TODO add your handling code here:
+         try {
+            // TODO add your handling code here:
+            InventoryOverview io = new InventoryOverview(this.sessionUser, "Replenish");
+            io.setTitle("DSL Inventory System | List of Items");
+            io.pack();
+            io.setLocationRelativeTo(null);
+            io.setVisible(true);
+//        this.setVisible(false);
+//        EditItem editItem = new EditItem(this.sessionUser);
+//        editItem.setTitle("DSL Inventory System | Edit Item");
+//        editItem.pack();
+//        editItem.setLocationRelativeTo(null);
+//        editItem.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        // TODO add your handling code here:this.setVisible(false);
+//        Replenish replenish = new Replenish(this.sessionUser);
+//        replenish.setTitle("DSL Inventory System | Replenish Stock");
+//        replenish.pack();
+//        replenish.setLocationRelativeTo(null);
+//        replenish.setVisible(true);
         
     }//GEN-LAST:event_btnReplenishStockActionPerformed
 
     private void btnDepleteStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepleteStockActionPerformed
         // TODO add your handling code here:
-        Deplete deplete = new Deplete(this.sessionUser);
-        deplete.setTitle("DSL Inventory System | Deplete Stock");
-        deplete.pack();
-        deplete.setLocationRelativeTo(null);
-        deplete.setVisible(true);
+         try {
+            // TODO add your handling code here:
+            InventoryOverview io = new InventoryOverview(this.sessionUser, "Deplete");
+            io.setTitle("DSL Inventory System | List of Items");
+            io.pack();
+            io.setLocationRelativeTo(null);
+            io.setVisible(true);
+//        this.setVisible(false);
+//        EditItem editItem = new EditItem(this.sessionUser);
+//        editItem.setTitle("DSL Inventory System | Edit Item");
+//        editItem.pack();
+//        editItem.setLocationRelativeTo(null);
+//        editItem.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+//        // TODO add your handling code here:
+//        Deplete deplete = new Deplete(this.sessionUser);
+//        deplete.setTitle("DSL Inventory System | Deplete Stock");
+//        deplete.pack();
+//        deplete.setLocationRelativeTo(null);
+//        deplete.setVisible(true);
     }//GEN-LAST:event_btnDepleteStockActionPerformed
+
+    private void btnDeleteItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteItemActionPerformed
+        // TODO add your handling code here:
+         try {
+            // TODO add your handling code here:
+            InventoryOverview io = new InventoryOverview(this.sessionUser, "Delete");
+            io.setTitle("DSL Inventory System | List of Items");
+            io.pack();
+            io.setLocationRelativeTo(null);
+            io.setVisible(true);
+//        this.setVisible(false);
+//        EditItem editItem = new EditItem(this.sessionUser);
+//        editItem.setTitle("DSL Inventory System | Edit Item");
+//        editItem.pack();
+//        editItem.setLocationRelativeTo(null);
+//        editItem.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteItemActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
