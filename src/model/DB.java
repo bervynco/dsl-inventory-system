@@ -340,4 +340,18 @@ public class DB {
             return "Error";
         }
     }
+
+    public String deleteItem(int itemID) throws ClassNotFoundException, SQLException {
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("Delete from items where item_id = ?");
+        ps.setInt(1, itemID);
+        int affectedRows = ps.executeUpdate();
+        c.close();
+        if(affectedRows != 0){
+            return "Successful";
+        }
+        else{
+            return "Failed";
+        }
+    }
 }

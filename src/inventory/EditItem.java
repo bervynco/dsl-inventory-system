@@ -245,6 +245,11 @@ public class EditItem extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtRemarks);
 
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -544,6 +549,54 @@ public class EditItem extends javax.swing.JFrame {
             Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        Object[] options = {"Yes, Delete it","No"};
+        
+        int n = JOptionPane.showOptionDialog(null,
+                    "Deletion Prompt",
+                    "Are you sure you want to delete it?",
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.DEFAULT_OPTION,
+                    null,
+                    options,
+                    options[1]);
+        if(n == 0){
+            try {
+                int itemID = Integer.parseInt(txtItemNo.getText());
+                String status = db.deleteItem(itemID);
+                if(status == "Successful"){
+                    try {
+                        JOptionPane.showMessageDialog(panel, "Item Deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Edit Item Page", "Delete");
+                        
+                        this.setVisible(false);
+                        ItemOption option = new ItemOption(this.sessionUser);
+                        option.setTitle("DSL Inventory System | Item Option");
+                        option.pack();
+                        option.setLocationRelativeTo(null);
+                        option.setVisible(true);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ParseException ex) {
+                        Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                else{
+                    JOptionPane.showMessageDialog(panel, "System Error.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+        }
+        else;
+        
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
