@@ -299,4 +299,45 @@ public class DB {
         c.close();
         return item;
     }
+
+    public static String updateItems(String ac, String batchNo, String colorTemp, String cri, String dc, String image, String information, String ipRate, 
+            String itemID, String kelvin, String locationNo, String lumens, String power, String productName, String rackNo, String remarks, String rowNo, String size, int threshold,
+            String wattage, String beamAngle, String productionDate) throws ClassNotFoundException, SQLException {
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("UPDATE items SET ac = ?, batch_no = ?,color_temp = ?, cri = ?, dc = ?, image = ?, information = ?, ip_rate = ?, "+
+                " kelvin = ?,location_no = ?, lumens = ?, power = ?, product_name = ?, rack_no = ?, remark = ?, row_no = ?, size = ?, minimum_quantity = ?, wattage = ?, beam_angle = ?,"+
+                "production_date = ? WHERE item_id = ?");
+        
+        ps.setString(1, ac);
+        ps.setString(2, batchNo);
+        ps.setString(3, colorTemp);
+        ps.setString(4, cri);
+        ps.setString(5, dc);
+        ps.setString(6, "");
+        ps.setString(7, information);
+        ps.setString(8, ipRate);
+        ps.setString(9, kelvin);
+        ps.setString(10, locationNo);
+        ps.setString(11, lumens);
+        ps.setString(12, power);
+        ps.setString(13, productName);
+        ps.setString(14, rackNo);
+        ps.setString(15, remarks);
+        ps.setString(16, rowNo);
+        ps.setString(17, size);
+        ps.setInt(18, threshold);
+        ps.setString(19, wattage);
+        ps.setString(20, beamAngle);
+        ps.setString(21, productionDate);
+        ps.setInt(22, Integer.parseInt(itemID));
+        
+        int affectedRow = ps.executeUpdate();
+        c.close();
+        if(affectedRow > 0){
+            return "Successful";
+        }
+        else{
+            return "Error";
+        }
+    }
 }

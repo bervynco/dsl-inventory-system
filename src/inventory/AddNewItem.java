@@ -438,7 +438,7 @@ public class AddNewItem extends javax.swing.JFrame {
         
             if(status == "Successful"){
                 JOptionPane.showMessageDialog(panel, "Item Added", "Success", JOptionPane.INFORMATION_MESSAGE);
-                db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Add User", "Save");
+                db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Add Item", "Save");
                 this.setVisible(false);
                 ItemOption option = new ItemOption(this.sessionUser);
                 option.setTitle("DSL Inventory System | Item Option");
