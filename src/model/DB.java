@@ -354,4 +354,25 @@ public class DB {
             return "Failed";
         }
     }
+    
+    public List<Transactions> getAllTransactions() throws ClassNotFoundException, SQLException{
+        ArrayList<Transactions>transactions = new ArrayList<Transactions>();
+        
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("Select employeeID, employeeName, itemID,"+
+                " item, quantity, type, transactionDate from transactions");
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            Transactions transaction = new Transactions();
+            transaction.setEmployeeID(rs.getInt(1));
+            transaction.setEmployeeName(rs.getString(2));
+            transaction.setItemID(rs.getInt(3));
+            transaction.setItemName(rs.getString(4));
+            transaction.setQuantity(rs.getInt(5));
+            transaction.setType(rs.getString(6));
+            transaction.setTransactionDate(rs.getDate(7));
+            transactions.add(transaction);
+        }
+        return transactions;
+    }
 }

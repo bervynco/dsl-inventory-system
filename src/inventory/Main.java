@@ -13,6 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import model.DB;
+import model.Item;
+import model.Transactions;
 import model.User;
 
 /**
@@ -59,14 +61,98 @@ public class Main extends javax.swing.JFrame {
     public DefaultTableModel FillTable(String currentMenu) throws SQLException, ClassNotFoundException, ParseException{
         DefaultTableModel model = new DefaultTableModel();
         model.setRowCount(0);
+        DB db = new DB();
         if(this.currentMenu.equals("Transactions")){
+            List<Transactions> transactions = new ArrayList<Transactions>();
+            transactions = db.getAllTransactions();
             
+            model.addColumn("Employee ID");
+            model.addColumn("Employee Name");
+            model.addColumn("Item ID");
+            model.addColumn("Item Name");
+            model.addColumn("Quantity");
+            model.addColumn("Type");
+            model.addColumn("Transaction Date");
+            
+            for(int i = 0; i < transactions.size(); i++){
+                Object [] rowData = {
+                    transactions.get(i).getEmployeeID(), 
+                    transactions.get(i).getEmployeeName(), 
+                    transactions.get(i).getItemID(),
+                    transactions.get(i).getItemName(), 
+                    transactions.get(i).getQuantity(), 
+                    transactions.get(i).getType(),
+                    transactions.get(i).getTransactionDate()
+                };
+                model.addRow(rowData);
+            }
         }
         else if(this.currentMenu.equals("Users")){
+            List<User> employees = new ArrayList<User>();
             
+            employees = db.getUsers();
+
+            model.addColumn("Employee ID");
+            model.addColumn("Name");
+            model.addColumn("Role");
+
+            for(int i = 0; i < employees.size(); i++){
+                Object [] rowData = {employees.get(i).getEmployeeID(), employees.get(i).getFullName(), employees.get(i).getRole()};
+                model.addRow(rowData);
+            }
         }
         else if(this.currentMenu.equals("Inventory")){
-            
+            List<Item> items = new ArrayList<Item>();
+            items = db.getItems();
+
+            model.addColumn("Item No");
+            model.addColumn("Product Name");
+            model.addColumn("Information");
+            model.addColumn("IP Rate");
+            model.addColumn("Kelvin");
+            model.addColumn("Beam Angle");
+            model.addColumn("Wattage");
+            model.addColumn("Color Temp");
+            model.addColumn("Batch No");
+            model.addColumn("Row No");
+            model.addColumn("Rack No");
+            model.addColumn("Location No");
+            model.addColumn("Threshold");
+            model.addColumn("Production Date");
+            model.addColumn("Lumens");
+            model.addColumn("Cri");
+            model.addColumn("Power");
+            model.addColumn("Size");
+            model.addColumn("AC");
+            model.addColumn("DC");
+            model.addColumn("Remarks");
+
+            for(int i = 0; i < items.size(); i++){
+                Object [] rowData = {
+                    items.get(i).getItemNo(),
+                    items.get(i).getProductName(),
+                    items.get(i).getInformation(),
+                    items.get(i).getIpRate(),
+                    items.get(i).getKelvin(),
+                    items.get(i).getBeamAngle(),
+                    items.get(i).getWattage(),
+                    items.get(i).getColorTemp(),
+                    items.get(i).getBatchNo(),
+                    items.get(i).getRowNo(),
+                    items.get(i).getRackNo(),
+                    items.get(i).getLocationNo(),
+                    items.get(i).getThreshold(),
+                    items.get(i).getProductionDate(),
+                    items.get(i).getLumens(),
+                    items.get(i).getCri(),
+                    items.get(i).getPower(),
+                    items.get(i).getSize(),
+                    items.get(i).getAc(),
+                    items.get(i).getDc(),
+                    items.get(i).getRemarks()
+                };
+                model.addRow(rowData);
+            }
         }
         else;
         return model;

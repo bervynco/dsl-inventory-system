@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import model.*;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -128,6 +129,7 @@ public class Login extends javax.swing.JFrame {
                 menu.setTitle("DSL Inventory System | Main Menu");
                 menu.pack();
                 menu.setLocationRelativeTo(null);
+                menu.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 menu.setVisible(true);
             }
             else{
