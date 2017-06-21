@@ -42,7 +42,7 @@ public class ItemOption extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnDepleteStock = new javax.swing.JButton();
         btnMainMenu = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnScan = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -93,7 +93,12 @@ public class ItemOption extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Scan");
+        btnScan.setText("Scan");
+        btnScan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnScanActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -113,7 +118,7 @@ public class ItemOption extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnDepleteStock, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(btnScan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(24, 24, 24))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,7 +145,7 @@ public class ItemOption extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnReplenishStock)
-                    .addComponent(jButton1))
+                    .addComponent(btnScan))
                 .addGap(32, 32, 32)
                 .addComponent(btnMainMenu)
                 .addContainerGap(37, Short.MAX_VALUE))
@@ -278,6 +283,15 @@ public class ItemOption extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDeleteItemActionPerformed
 
+    private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
+        // TODO add your handling code here:
+        ScanPage page = new ScanPage(this.sessionUser);
+        page.setTitle("DSL Inventory System | List of Items");
+        page.pack();
+        page.setLocationRelativeTo(null);
+        page.setVisible(true);
+    }//GEN-LAST:event_btnScanActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddNewItem;
@@ -286,7 +300,7 @@ public class ItemOption extends javax.swing.JFrame {
     private javax.swing.JButton btnEditItem;
     private javax.swing.JButton btnMainMenu;
     private javax.swing.JButton btnReplenishStock;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnScan;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
