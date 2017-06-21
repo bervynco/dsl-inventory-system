@@ -37,8 +37,6 @@ public class Main extends javax.swing.JFrame {
         tableList.setModel(model);
         this.FillComboBox();
         employeeName.setText(this.sessionUser.getFullName());
-        btnEdit.setVisible(false);
-        btnDelete.setVisible(false);
         btnAdd.setVisible(false);
     }
     public void FillComboBox() throws SQLException, ClassNotFoundException{
@@ -187,8 +185,6 @@ public class Main extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         comboBoxEmployees = new javax.swing.JComboBox<>();
         btnAdd = new java.awt.Button();
-        btnEdit = new java.awt.Button();
-        btnDelete = new java.awt.Button();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableList = new javax.swing.JTable();
         lblTitle = new javax.swing.JLabel();
@@ -219,23 +215,6 @@ public class Main extends javax.swing.JFrame {
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
-            }
-        });
-
-        btnEdit.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        btnEdit.setLabel("Edit");
-        btnEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditActionPerformed(evt);
-            }
-        });
-
-        btnDelete.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        btnDelete.setForeground(new java.awt.Color(255, 51, 51));
-        btnDelete.setLabel("Delete");
-        btnDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
             }
         });
 
@@ -362,12 +341,7 @@ public class Main extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(employeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(33, 33, 33)
-                                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
-                                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
@@ -379,10 +353,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(employeeName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEdit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDelete, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -399,8 +370,6 @@ public class Main extends javax.swing.JFrame {
     private void menuTransactionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuTransactionsMouseClicked
         try {
             this.currentMenu = "Transactions";
-            btnEdit.setVisible(false);
-            btnDelete.setVisible(false);
             btnAdd.setVisible(false);
             lblTitle.setText("List of Transactions");
             this.FillComboBox();
@@ -423,8 +392,6 @@ public class Main extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.currentMenu = "Users";
-            btnEdit.setVisible(true);
-            btnDelete.setVisible(true);
             btnAdd.setVisible(true);
             lblTitle.setText("List of Users");
             this.FillComboBox();
@@ -443,8 +410,6 @@ public class Main extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.currentMenu = "Inventory";
-            btnEdit.setVisible(true);
-            btnDelete.setVisible(true);
             btnAdd.setVisible(true);
             btnAdd.setLabel("Add");
             lblTitle.setText("List of Inventory Items");
@@ -510,15 +475,6 @@ public class Main extends javax.swing.JFrame {
         else;
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_btnEditActionPerformed
-
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-       
-    }//GEN-LAST:event_btnDeleteActionPerformed
-
     private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
        
     }//GEN-LAST:event_tableListMouseClicked
@@ -528,8 +484,6 @@ public class Main extends javax.swing.JFrame {
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button btnAdd;
-    private java.awt.Button btnDelete;
-    private java.awt.Button btnEdit;
     private javax.swing.JComboBox<String> comboBoxEmployees;
     private javax.swing.JLabel employeeName;
     private javax.swing.JLabel jLabel1;
