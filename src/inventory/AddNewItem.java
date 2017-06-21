@@ -434,7 +434,7 @@ public class AddNewItem extends javax.swing.JFrame {
             String productionDate = dpProductionDate.getDateStringOrEmptyString();
             String wattage = txtWattage.getText();
             String status = db.addItem(ac, batchNo, colorTemp, cri, dc, image, information, ipRate, itemNo, kelvin, locationNo, lumens,
-                    power, productName, rackNo, remarks, rowNo, size, threshold, wattage, beamAngle, productionDate);
+                    power, productName, rackNo, remarks, rowNo, size, threshold, threshold, wattage, beamAngle, productionDate);
         
             if(status == "Successful"){
                 JOptionPane.showMessageDialog(panel, "Item Added", "Success", JOptionPane.INFORMATION_MESSAGE);

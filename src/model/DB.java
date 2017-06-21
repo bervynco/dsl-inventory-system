@@ -173,7 +173,41 @@ public class DB {
         return user;
     }
     
-     public static void setLogStatus(int employeeID, String name, String page, String action) throws ClassNotFoundException, SQLException, ParseException{
+    public Integer getIdFromEmployeeName(String name) throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("Select employee_id from users where name = ?");
+        ps.setString(1, name);
+        ResultSet rs = ps.executeQuery();
+        int employeeID = 0;
+        while(rs.next()){
+            employeeID = rs.getInt(1);
+        }
+        
+        return employeeID;
+    }
+    
+    public static List<User> filterUsers(int employeeID) throws SQLException, ClassNotFoundException{
+        List<User> employees = new ArrayList<User>();
+        Connection c = connect();
+        
+        PreparedStatement ps = c.prepareStatement("Select * from users where employee_id = ?");
+        ps.setInt(1, employeeID);
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+                User user = new User();
+                System.out.println(rs.getInt(2));
+                user.setEmployeeID(rs.getInt(2));
+                user.setFullName(rs.getString(3));
+                user.setRole(rs.getString(4));
+                
+                employees.add(user);
+        }
+        c.close();
+        return employees;
+    }
+    
+    public static void setLogStatus(int employeeID, String name, String page, String action) throws ClassNotFoundException, SQLException, ParseException{
         Timestamp dateToday = DB.getDateToday();
         //java.sql.Date.
         //;
@@ -191,12 +225,12 @@ public class DB {
 
     public String addItem(String ac, String batchNo, String colorTemp, String cri, String dc, String image, String information, String ipRate, String itemNo, String kelvin,
             String locationNo, String lumens, String power, String productName, String rackNo, String remarks,
-            String rowNo, String size, int threshold, String wattage, String beamAngle, String productionDate) throws ClassNotFoundException, SQLException {
+            String rowNo, String size, int quantity, int threshold, String wattage, String beamAngle, String productionDate) throws ClassNotFoundException, SQLException {
         Connection c = connect();
         int itemID = Integer.parseInt(itemNo);
         PreparedStatement ps = c.prepareStatement("INSERT INTO items (item_id, product_name, information, ip_rate, kelvin, beam_angle, wattage,"+
-                " color_temp, batch_no, row_no, rack_no, location_no, minimum_quantity, production_date, lumens, cri, power, size, ac, dc, remark"+
-                ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                " color_temp, batch_no, row_no, rack_no, location_no, quantity, threshold, production_date, lumens, cri, power, size, ac, dc, remark"+
+                ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         
         ps.setInt(1, itemID);
         ps.setString(2, productName);
@@ -210,16 +244,16 @@ public class DB {
         ps.setString(10, rowNo);
         ps.setString(11, rackNo);
         ps.setString(12, locationNo);
-        ps.setInt(13, threshold);
-        ps.setString(14, productionDate);
-        ps.setString(15, lumens);
-        ps.setString(16, cri);
-        ps.setString(17, power);
-        ps.setString(18, size);
-        ps.setString(19, ac);
-        ps.setString(20, dc);
-        ps.setString(21, remarks);
-        
+        ps.setInt(13, quantity);
+        ps.setInt(14, threshold);
+        ps.setString(15, productionDate);
+        ps.setString(16, lumens);
+        ps.setString(17, cri);
+        ps.setString(18, power);
+        ps.setString(19, size);
+        ps.setString(20, ac);
+        ps.setString(21, dc);
+        ps.setString(22, remarks);
         
         int rows = ps.executeUpdate();
         if(rows > 0){
@@ -251,15 +285,16 @@ public class DB {
             item.setRowNo(rs.getString(11));
             item.setRackNo(rs.getString(12));
             item.setLocationNo(rs.getString(13));
-            item.setThreshold(rs.getInt(14));
-            item.setProductionDate(rs.getString(15));
-            item.setLumens(rs.getString(16));
-            item.setCri(rs.getString(17));
-            item.setPower(rs.getString(18));
-            item.setSize(rs.getString(19));
-            item.setAc(rs.getString(20));
-            item.setDc(rs.getString(21));
-            item.setRemarks(rs.getString(22));
+            item.setQuantity(rs.getInt(14));
+            item.setThreshold(rs.getInt(15));
+            item.setProductionDate(rs.getString(16));
+            item.setLumens(rs.getString(17));
+            item.setCri(rs.getString(18));
+            item.setPower(rs.getString(19));
+            item.setSize(rs.getString(20));
+            item.setAc(rs.getString(21));
+            item.setDc(rs.getString(22));
+            item.setRemarks(rs.getString(23));
             
             items.add(item);
             
@@ -267,6 +302,7 @@ public class DB {
         c.close();
         return items;
     }
+    
     public static Item getItemDetails(int itemID) throws ClassNotFoundException, SQLException{
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("Select * from items where item_id = ?");
@@ -286,26 +322,27 @@ public class DB {
             item.setRowNo(rs.getString(11));
             item.setRackNo(rs.getString(12));
             item.setLocationNo(rs.getString(13));
-            item.setThreshold(rs.getInt(14));
-            item.setProductionDate(rs.getString(15));
-            item.setLumens(rs.getString(16));
-            item.setCri(rs.getString(17));
-            item.setPower(rs.getString(18));
-            item.setSize(rs.getString(19));
-            item.setAc(rs.getString(20));
-            item.setDc(rs.getString(21));
-            item.setRemarks(rs.getString(22));
+            item.setQuantity(rs.getInt(14));
+            item.setThreshold(rs.getInt(15));
+            item.setProductionDate(rs.getString(16));
+            item.setLumens(rs.getString(17));
+            item.setCri(rs.getString(18));
+            item.setPower(rs.getString(19));
+            item.setSize(rs.getString(20));
+            item.setAc(rs.getString(21));
+            item.setDc(rs.getString(22));
+            item.setRemarks(rs.getString(23));
         }
         c.close();
         return item;
     }
 
     public static String updateItems(String ac, String batchNo, String colorTemp, String cri, String dc, String image, String information, String ipRate, 
-            String itemID, String kelvin, String locationNo, String lumens, String power, String productName, String rackNo, String remarks, String rowNo, String size, int threshold,
-            String wattage, String beamAngle, String productionDate) throws ClassNotFoundException, SQLException {
+            String itemID, String kelvin, String locationNo, String lumens, String power, String productName, String rackNo, String remarks, String rowNo, String size, int quantity,
+            int threshold, String wattage, String beamAngle, String productionDate) throws ClassNotFoundException, SQLException {
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("UPDATE items SET ac = ?, batch_no = ?,color_temp = ?, cri = ?, dc = ?, image = ?, information = ?, ip_rate = ?, "+
-                " kelvin = ?,location_no = ?, lumens = ?, power = ?, product_name = ?, rack_no = ?, remark = ?, row_no = ?, size = ?, minimum_quantity = ?, wattage = ?, beam_angle = ?,"+
+                " kelvin = ?,location_no = ?, lumens = ?, power = ?, product_name = ?, rack_no = ?, remark = ?, row_no = ?, size = ?, quantity = ?, threshold = ?, wattage = ?, beam_angle = ?,"+
                 "production_date = ? WHERE item_id = ?");
         
         ps.setString(1, ac);
@@ -325,11 +362,12 @@ public class DB {
         ps.setString(15, remarks);
         ps.setString(16, rowNo);
         ps.setString(17, size);
-        ps.setInt(18, threshold);
-        ps.setString(19, wattage);
-        ps.setString(20, beamAngle);
-        ps.setString(21, productionDate);
-        ps.setInt(22, Integer.parseInt(itemID));
+        ps.setInt(18, quantity);
+        ps.setInt(19, threshold);
+        ps.setString(20, wattage);
+        ps.setString(21, beamAngle);
+        ps.setString(22, productionDate);
+        ps.setInt(23, Integer.parseInt(itemID));
         
         int affectedRow = ps.executeUpdate();
         c.close();
@@ -355,6 +393,50 @@ public class DB {
         }
     }
     
+    public static List<Item> filterItems(String filter) throws ClassNotFoundException, SQLException{
+        List<Item> items = new ArrayList<Item>();
+        Connection c = connect();
+        
+        PreparedStatement ps = null;
+        if(filter.equals("No Filter")){
+            ps = c.prepareStatement("Select * from items"); 
+        }
+        else{
+            ps = c. prepareStatement("Select * from items where quantity <= threshold");
+        }
+        ResultSet rs = ps.executeQuery();
+        
+        while(rs.next()){
+            Item item = new Item();
+            item.setItemNo(Integer.toString(rs.getInt(2)));
+            item.setProductName(rs.getString(3));
+            item.setInformation(rs.getString(4));
+            item.setIpRate(rs.getString(5));
+            item.setKelvin(rs.getString(6));
+            item.setBeamAngle(rs.getString(7));
+            item.setWattage(rs.getString(8));
+            item.setColorTemp(rs.getString(9));
+            item.setBatchNo(rs.getString(10));
+            item.setRowNo(rs.getString(11));
+            item.setRackNo(rs.getString(12));
+            item.setLocationNo(rs.getString(13));
+            item.setQuantity(rs.getInt(14));
+            item.setThreshold(rs.getInt(15));
+            item.setProductionDate(rs.getString(16));
+            item.setLumens(rs.getString(17));
+            item.setCri(rs.getString(18));
+            item.setPower(rs.getString(19));
+            item.setSize(rs.getString(20));
+            item.setAc(rs.getString(21));
+            item.setDc(rs.getString(22));
+            item.setRemarks(rs.getString(23));
+            
+            items.add(item);
+            
+        }
+        c.close();
+        return items;
+    }
     public List<Transactions> getAllTransactions() throws ClassNotFoundException, SQLException{
         ArrayList<Transactions>transactions = new ArrayList<Transactions>();
         
@@ -375,4 +457,39 @@ public class DB {
         }
         return transactions;
     }
+    
+    public List<Transactions> filterTransactions(String filter) throws ClassNotFoundException, SQLException{
+        ArrayList<Transactions>transactions = new ArrayList<Transactions>();
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        Connection c = connect();
+        PreparedStatement ps = null;
+        if(filter.equals("Monthly")){
+            ps = c.prepareStatement("Select employeeID, employeeName, itemID,"+
+                " item, quantity, type, transactionDate from transactions where month(transactionDate) = ? and year(transactionDate)=?");
+            ps.setInt(1, month);
+            ps.setInt(2, year);
+        }
+        else if(filter.equals("Yearly")){
+            ps = c.prepareStatement("Select employeeID, employeeName, itemID,"+
+                " item, quantity, type, transactionDate from transactions where year(transactionDate)=?");
+            ps.setInt(1, year);
+        }
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            Transactions transaction = new Transactions();
+            transaction.setEmployeeID(rs.getInt(1));
+            transaction.setEmployeeName(rs.getString(2));
+            transaction.setItemID(rs.getInt(3));
+            transaction.setItemName(rs.getString(4));
+            transaction.setQuantity(rs.getInt(5));
+            transaction.setType(rs.getString(6));
+            transaction.setTransactionDate(rs.getDate(7));
+            transactions.add(transaction);
+        }
+        return transactions;
+    }
+    
+    
 }

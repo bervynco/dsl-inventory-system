@@ -26,7 +26,8 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-    private static String currentMenu = "Employees";
+    private static String currentMenu = "Transactions";
+    private static String currentFilter;
     private static User sessionUser = null;
     public Main(User user, String currentMenu) throws SQLException, ClassNotFoundException, ParseException {
         initComponents();
@@ -34,29 +35,31 @@ public class Main extends javax.swing.JFrame {
         this.currentMenu = currentMenu;
         DefaultTableModel model = this.FillTable(this.currentMenu);
         tableList.setModel(model);
-        this.FillEmployeesComboBox();
+        this.FillComboBox();
         employeeName.setText(this.sessionUser.getFullName());
         btnEdit.setVisible(false);
         btnDelete.setVisible(false);
         btnAdd.setVisible(false);
     }
-    public void FillEmployeesComboBox() throws SQLException, ClassNotFoundException{
-        List<User> employees = new ArrayList<User>();
-        employees = DB.getUsers();
+    public void FillComboBox() throws SQLException, ClassNotFoundException{
+        comboBoxEmployees.removeAllItems();
         comboBoxEmployees.addItem("No Filter");
-        if(this.currentMenu.equals("Transaction")){
-            
+        if(this.currentMenu.equals("Transactions")){
+            comboBoxEmployees.addItem("Montly");
+            comboBoxEmployees.addItem("Yearly");
         }
         else if(this.currentMenu.equals("Inventory")){
-            
+            comboBoxEmployees.addItem("Within Threshold");
         }
         else if(this.currentMenu.equals("Users")){
-            
+            List<User> employees = new ArrayList<User>();
+            employees = DB.getUsers();
+            for(int i = 0; i < employees.size(); i++){
+                String fullName = employees.get(i).getFullName();
+                comboBoxEmployees.addItem(fullName);
+            }
         }
-//        for(int i = 0; i < employees.size(); i++){
-//            String fullName = employees.get(i).getFirstName()+ " " + employees.get(i).getLastName();
-//            comboBoxEmployees.addItem(fullName);
-//        }
+
     }
     public DefaultTableModel FillTable(String currentMenu) throws SQLException, ClassNotFoundException, ParseException{
         DefaultTableModel model = new DefaultTableModel();
@@ -64,8 +67,13 @@ public class Main extends javax.swing.JFrame {
         DB db = new DB();
         if(this.currentMenu.equals("Transactions")){
             List<Transactions> transactions = new ArrayList<Transactions>();
-            transactions = db.getAllTransactions();
-            
+            if(this.currentFilter.equals("No Filter")){
+                transactions = db.getAllTransactions();
+            }
+            else{
+                transactions = db.filterTransactions(this.currentFilter);
+            }
+
             model.addColumn("Employee ID");
             model.addColumn("Employee Name");
             model.addColumn("Item ID");
@@ -90,8 +98,13 @@ public class Main extends javax.swing.JFrame {
         else if(this.currentMenu.equals("Users")){
             List<User> employees = new ArrayList<User>();
             
-            employees = db.getUsers();
-
+            if(this.currentFilter.equals("No Filter")){
+                employees = db.getUsers();
+            }
+            else{
+                int id = Integer.parseInt(this.currentFilter);
+                employees = db.filterUsers(id);
+            }
             model.addColumn("Employee ID");
             model.addColumn("Name");
             model.addColumn("Role");
@@ -103,7 +116,12 @@ public class Main extends javax.swing.JFrame {
         }
         else if(this.currentMenu.equals("Inventory")){
             List<Item> items = new ArrayList<Item>();
-            items = db.getItems();
+            if(this.currentFilter.equals("No Filter")){
+                items = db.getItems();
+            }
+            else{
+                items = db.filterItems(this.currentFilter);
+            }
 
             model.addColumn("Item No");
             model.addColumn("Product Name");
@@ -385,6 +403,7 @@ public class Main extends javax.swing.JFrame {
             btnDelete.setVisible(false);
             btnAdd.setVisible(false);
             lblTitle.setText("List of Transactions");
+            this.FillComboBox();
             DefaultTableModel model = this.FillTable(this.currentMenu);
             tableList.setModel(model);
         } catch (SQLException ex) {
@@ -408,6 +427,7 @@ public class Main extends javax.swing.JFrame {
             btnDelete.setVisible(true);
             btnAdd.setVisible(true);
             lblTitle.setText("List of Users");
+            this.FillComboBox();
             DefaultTableModel model = this.FillTable(this.currentMenu);
             tableList.setModel(model);
         } catch (SQLException ex) {
@@ -428,6 +448,7 @@ public class Main extends javax.swing.JFrame {
             btnAdd.setVisible(true);
             btnAdd.setLabel("Add");
             lblTitle.setText("List of Inventory Items");
+            this.FillComboBox();
             DefaultTableModel model = this.FillTable(this.currentMenu);
             tableList.setModel(model);
         } catch (SQLException ex) {
@@ -445,24 +466,19 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuLogoutMouseClicked
 
     private void comboBoxEmployeesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxEmployeesActionPerformed
-//        try {
-//            // TODO add your handling code here:
-//            String employeeName = (String) comboBoxEmployees.getSelectedItem();
-//            if(employeeName.equals("No Filter")){
-//                this.currentEmployeeFilter = 0;
-//            }
-//            else{
-//                this.currentEmployeeFilter = DB.getEmployeeIDFromName(employeeName);
-//            }
-//            DefaultTableModel model = this.FillTable(this.currentMenu);
-//            tableList.setModel(model);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ParseException ex) {
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        this.currentFilter = (String)comboBoxEmployees.getSelectedItem();
+        DB db = new DB();
+        if(this.currentMenu.equals("Users")){
+            try {
+                int id = db.getIdFromEmployeeName(this.currentFilter);
+                this.currentMenu = Integer.toString(id);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
     }//GEN-LAST:event_comboBoxEmployeesActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed

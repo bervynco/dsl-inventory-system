@@ -30,6 +30,7 @@ public class Item {
     private static String remarks;
     private static String rowNo;
     private static String size;
+    private static int quantity;
     private static int threshold;
     private static String wattage;
     private static String productionDate;
@@ -194,6 +195,14 @@ public class Item {
         Item.size = size;
     }
 
+    public static int getQuantity() {
+        return quantity;
+    }
+
+    public static void setQuantity(int quantity) {
+        Item.quantity = quantity;
+    }
+    
     public static int getThreshold() {
         return threshold;
     }
