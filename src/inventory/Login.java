@@ -125,7 +125,7 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(panel, "Login Successful. Click OK to proceed.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 db.setLogStatus(user.getEmployeeID(), user.getFullName(), "Login Page", "Login");
                 this.setVisible(false);
-                Main menu = new Main(user, "Transactions");
+                Main menu = new Main(user, "Inventory");
                 menu.setTitle("DSL Inventory System | Main Menu");
                 menu.pack();
                 menu.setLocationRelativeTo(null);

@@ -5,6 +5,12 @@
  */
 package inventory;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -21,13 +27,15 @@ import model.User;
  *
  * @author L R E
  */
+     
+
 public class Main extends javax.swing.JFrame {
 
     /**
      * Creates new form Main
      */
-    private static String currentMenu = "Transactions";
-    private static String currentFilter;
+    private static String currentMenu = "Inventory";
+    
     private static User sessionUser = null;
     public Main(User user, String currentMenu) throws SQLException, ClassNotFoundException, ParseException {
         initComponents();
@@ -35,43 +43,70 @@ public class Main extends javax.swing.JFrame {
         this.currentMenu = currentMenu;
         DefaultTableModel model = this.FillTable(this.currentMenu);
         tableList.setModel(model);
-        this.FillComboBox();
+        //this.FillComboBox();
         employeeName.setText(this.sessionUser.getFullName());
-        btnAdd.setVisible(false);
+        this.setLabelTitle();
+        this.setButtonVisibility();
+        
     }
-    public void FillComboBox() throws SQLException, ClassNotFoundException{
-        comboBoxEmployees.removeAllItems();
-        comboBoxEmployees.addItem("No Filter");
-        if(this.currentMenu.equals("Transactions")){
-            comboBoxEmployees.addItem("Montly");
-            comboBoxEmployees.addItem("Yearly");
+    public void setLabelTitle(){
+        if(this.currentMenu.equals("Inventory"))
+            lblTitle.setText("List of Inventory Items");
+        else if(this.currentMenu.equals("Transactions"))
+            lblTitle.setText("List of Transactions");
+        else if(this.currentMenu.equals("Users"))
+            lblTitle.setText("List of Users");
+    }
+    public void setButtonVisibility(){
+        btnAdd.setLabel("Add");
+        btnScan.setLabel("Scan");
+        if(this.currentMenu.equals("Inventory")){
+            btnAdd.setVisible(true);
+            btnScan.setVisible(true);
         }
-        else if(this.currentMenu.equals("Inventory")){
-            comboBoxEmployees.addItem("Within Threshold");
+        else if(this.currentMenu.equals("Transactions")){
+            btnAdd.setVisible(false);
+            btnScan.setVisible(false);
         }
         else if(this.currentMenu.equals("Users")){
-            List<User> employees = new ArrayList<User>();
-            employees = DB.getUsers();
-            for(int i = 0; i < employees.size(); i++){
-                String fullName = employees.get(i).getFullName();
-                comboBoxEmployees.addItem(fullName);
-            }
+            btnAdd.setVisible(true);
+            btnScan.setVisible(false);
+            btnAdd.setLabel("Add");
         }
-
     }
+//    public void FillComboBox() throws SQLException, ClassNotFoundException{
+//        comboBoxEmployees.removeAllItems();
+//        comboBoxEmployees.addItem("No Filter");
+//        if(this.currentMenu.equals("Transactions")){
+//            comboBoxEmployees.addItem("Montly");
+//            comboBoxEmployees.addItem("Yearly");
+//        }
+//        else if(this.currentMenu.equals("Inventory")){
+//            comboBoxEmployees.addItem("Within Threshold");
+//        }
+//        else if(this.currentMenu.equals("Users")){
+//            List<User> employees = new ArrayList<User>();
+//            employees = DB.getUsers();
+//            for(int i = 0; i < employees.size(); i++){
+//                String fullName = employees.get(i).getFullName();
+//                comboBoxEmployees.addItem(fullName);
+//            }
+//        }
+//
+//    }
     public DefaultTableModel FillTable(String currentMenu) throws SQLException, ClassNotFoundException, ParseException{
         DefaultTableModel model = new DefaultTableModel();
         model.setRowCount(0);
         DB db = new DB();
         if(this.currentMenu.equals("Transactions")){
             List<Transactions> transactions = new ArrayList<Transactions>();
-            if(this.currentFilter.equals("No Filter")){
-                transactions = db.getAllTransactions();
-            }
-            else{
-                transactions = db.filterTransactions(this.currentFilter);
-            }
-
+//            if(this.currentFilter.equals("No Filter")){
+//                
+//            }
+//            else{
+//                transactions = db.filterTransactions(this.currentFilter);
+//            }
+            transactions = db.getAllTransactions();
             model.addColumn("Employee ID");
             model.addColumn("Employee Name");
             model.addColumn("Item ID");
@@ -96,13 +131,14 @@ public class Main extends javax.swing.JFrame {
         else if(this.currentMenu.equals("Users")){
             List<User> employees = new ArrayList<User>();
             
-            if(this.currentFilter.equals("No Filter")){
-                employees = db.getUsers();
-            }
-            else{
-                int id = Integer.parseInt(this.currentFilter);
-                employees = db.filterUsers(id);
-            }
+//            if(this.currentFilter.equals("No Filter")){
+//                
+//            }
+//            else{
+//                int id = Integer.parseInt(this.currentFilter);
+//                employees = db.filterUsers(id);
+//            }
+            employees = db.getUsers();
             model.addColumn("Employee ID");
             model.addColumn("Name");
             model.addColumn("Role");
@@ -114,13 +150,13 @@ public class Main extends javax.swing.JFrame {
         }
         else if(this.currentMenu.equals("Inventory")){
             List<Item> items = new ArrayList<Item>();
-            if(this.currentFilter.equals("No Filter")){
-                items = db.getItems();
-            }
-            else{
-                items = db.filterItems(this.currentFilter);
-            }
-
+//            if(this.currentFilter.equals("No Filter")){
+//                
+//            }
+//            else{
+//                items = db.filterItems(this.currentFilter);
+//            }
+            items = db.getItems();
             model.addColumn("Item No");
             model.addColumn("Product Name");
             model.addColumn("Information");
@@ -182,14 +218,13 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        comboBoxEmployees = new javax.swing.JComboBox<>();
-        btnAdd = new java.awt.Button();
+        btnScan = new java.awt.Button();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableList = new javax.swing.JTable();
         lblTitle = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         employeeName = new javax.swing.JLabel();
+        btnAdd = new java.awt.Button();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuTransactions = new javax.swing.JMenu();
         menuUsers = new javax.swing.JMenu();
@@ -198,23 +233,11 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Filter:");
-
-        comboBoxEmployees.setEditable(true);
-        comboBoxEmployees.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        comboBoxEmployees.setModel(new javax.swing.DefaultComboBoxModel<>());
-        comboBoxEmployees.addActionListener(new java.awt.event.ActionListener() {
+        btnScan.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        btnScan.setLabel("Add");
+        btnScan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxEmployeesActionPerformed(evt);
-            }
-        });
-
-        btnAdd.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        btnAdd.setLabel("Add");
-        btnAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                btnScanActionPerformed(evt);
             }
         });
 
@@ -276,6 +299,14 @@ public class Main extends javax.swing.JFrame {
         employeeName.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         employeeName.setForeground(new java.awt.Color(1, 169, 130));
 
+        btnAdd.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        btnAdd.setLabel("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
         jMenuBar1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
 
         menuTransactions.setText("Transactions");
@@ -330,20 +361,20 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16)
+                        .addComponent(btnScan, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(comboBoxEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(employeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(employeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addContainerGap())
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -353,15 +384,14 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(employeeName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addComponent(comboBoxEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnScan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 569, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -370,9 +400,10 @@ public class Main extends javax.swing.JFrame {
     private void menuTransactionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuTransactionsMouseClicked
         try {
             this.currentMenu = "Transactions";
-            btnAdd.setVisible(false);
-            lblTitle.setText("List of Transactions");
-            this.FillComboBox();
+//            btnAdd.setVisible(false);
+//            btnScan.setVisible(false);
+            //lblTitle.setText("List of Transactions");
+            //this.FillComboBox();
             DefaultTableModel model = this.FillTable(this.currentMenu);
             tableList.setModel(model);
         } catch (SQLException ex) {
@@ -392,9 +423,10 @@ public class Main extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.currentMenu = "Users";
-            btnAdd.setVisible(true);
-            lblTitle.setText("List of Users");
-            this.FillComboBox();
+//            btnAdd.setLabel("Add");
+//            btnAdd.setVisible(true);
+            //lblTitle.setText("List of Users");
+            //this.FillComboBox();
             DefaultTableModel model = this.FillTable(this.currentMenu);
             tableList.setModel(model);
         } catch (SQLException ex) {
@@ -410,10 +442,12 @@ public class Main extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.currentMenu = "Inventory";
-            btnAdd.setVisible(true);
-            btnAdd.setLabel("Add");
-            lblTitle.setText("List of Inventory Items");
-            this.FillComboBox();
+//            btnScan.setVisible(true);
+//            btnScan.setLabel("Scan");
+//            btnAdd.setVisible(true);
+//            btnAdd.setLabel("Add");
+            //lblTitle.setText("List of Inventory Items");
+            //this.FillComboBox();
             DefaultTableModel model = this.FillTable(this.currentMenu);
             tableList.setModel(model);
         } catch (SQLException ex) {
@@ -430,24 +464,21 @@ public class Main extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_menuLogoutMouseClicked
 
-    private void comboBoxEmployeesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxEmployeesActionPerformed
-        this.currentFilter = (String)comboBoxEmployees.getSelectedItem();
-        DB db = new DB();
-        if(this.currentMenu.equals("Users")){
-            try {
-                int id = db.getIdFromEmployeeName(this.currentFilter);
-                this.currentMenu = Integer.toString(id);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }
-    }//GEN-LAST:event_comboBoxEmployeesActionPerformed
+    private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
+        ScanPage scan = new ScanPage(this.sessionUser);
+        scan.setTitle("DSL Inventory System | Scan");
+        scan.pack();
+        scan.setLocationRelativeTo(null);
+        scan.setVisible(true);
+    }//GEN-LAST:event_btnScanActionPerformed
+
+    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
+       
+    }//GEN-LAST:event_tableListMouseClicked
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-//        // TODO add your handling code here:
+        // TODO add your handling code here:
+          // TODO add your handling code here:
         this.setVisible(false);
         if(this.currentMenu.equals("Users")){
             try {
@@ -475,18 +506,13 @@ public class Main extends javax.swing.JFrame {
         else;
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-       
-    }//GEN-LAST:event_tableListMouseClicked
-
     /**
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button btnAdd;
-    private javax.swing.JComboBox<String> comboBoxEmployees;
+    private java.awt.Button btnScan;
     private javax.swing.JLabel employeeName;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;

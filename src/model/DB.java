@@ -146,7 +146,6 @@ public class DB {
         
         while (rs.next()) {
                 User user = new User();
-                System.out.println(rs.getInt(2));
                 user.setEmployeeID(rs.getInt(2));
                 user.setFullName(rs.getString(3));
                 user.setRole(rs.getString(4));
@@ -268,9 +267,8 @@ public class DB {
         List<Item> items = new ArrayList<Item>();
         Connection c = connect();
         
-        PreparedStatement ps = c.prepareStatement("Select * from items");
+        PreparedStatement ps = c.prepareStatement("Select * from items order by status DESC");
         ResultSet rs = ps.executeQuery();
-        
         while(rs.next()){
             Item item = new Item();
             item.setItemNo(Integer.toString(rs.getInt(2)));
