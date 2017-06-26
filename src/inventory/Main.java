@@ -11,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -473,7 +474,46 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnScanActionPerformed
 
     private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-       
+        int row = tableList.rowAtPoint(evt.getPoint());
+        this.setVisible(false);
+        if(this.currentMenu.equals("Users")){
+            try {
+                int employeeID = (int) tableList.getValueAt(row, 0);
+                EditUser edit = new EditUser(this.sessionUser, employeeID);
+                edit.setTitle("DSL Inventory System | Edit User");
+                edit.pack();
+                edit.setLocationRelativeTo(null);
+                edit.setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+       }
+       else if(this.currentMenu.equals("Inventory")){
+            try {
+                String itemID = (String) tableList.getValueAt(row, 0);
+                EditItem edit = new EditItem(this.sessionUser, Integer.parseInt(itemID));
+                edit.setTitle("DSL Inventory System | Edit User");
+                edit.pack();
+                edit.setLocationRelativeTo(null);
+                edit.setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+       }
+       else if(this.currentMenu.equals("Transactions")){
+           
+       }
+       else;
     }//GEN-LAST:event_tableListMouseClicked
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed

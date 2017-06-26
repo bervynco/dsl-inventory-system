@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import model.DB;
@@ -35,6 +36,7 @@ public class EditItem extends javax.swing.JFrame {
     private final JPanel panel = new JPanel();
     DB db = new DB();
     public void setEditableFields(int itemID) throws ClassNotFoundException, SQLException, IOException{
+        System.out.println(itemID);
         Item item = new Item();
         item =  db.getItemDetails(itemID);
         // String[] name = user.getFullName().split(" ");
@@ -82,6 +84,9 @@ public class EditItem extends javax.swing.JFrame {
             btnEdit.setVisible(true);
             btnDelete.setVisible(true);
         }
+    }
+    public EditItem(User user, int itemID) throws ClassNotFoundException, SQLException, IOException{
+        this.setEditableFields(itemID);
     }
 
     /**
@@ -491,27 +496,30 @@ public class EditItem extends javax.swing.JFrame {
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-         if(this.pageFrom == "Main"){
+//         if(this.pageFrom == "Main"){
             try {
-                InventoryOverview option = new InventoryOverview(this.sessionUser, "");
-                option.setTitle("DSL Inventory System | Inventory");
-                option.pack();
-                option.setLocationRelativeTo(null);
-                option.setVisible(true);
+                Main menu = new Main(this.sessionUser, "Inventory");
+                menu.setTitle("DSL Inventory System | Main Menu");
+                menu.pack();
+                menu.setLocationRelativeTo(null);
+                menu.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                menu.setVisible(true);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        else if(this.action == "Options"){
-            ItemOption option = new ItemOption(this.sessionUser);
-            option.setTitle("DSL Inventory System | Item Option");
-            option.pack();
-            option.setLocationRelativeTo(null);
-            option.setVisible(true);
-        }
-        else;
+//        }
+//        else if(this.action == "Options"){
+//            ItemOption option = new ItemOption(this.sessionUser);
+//            option.setTitle("DSL Inventory System | Item Option");
+//            option.pack();
+//            option.setLocationRelativeTo(null);
+//            option.setVisible(true);
+//        }
+//        else;
 
     }//GEN-LAST:event_btnCancelActionPerformed
 
@@ -587,11 +595,12 @@ public class EditItem extends javax.swing.JFrame {
                         db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Edit Item Page", "Delete");
                         
                         this.setVisible(false);
-                        ItemOption option = new ItemOption(this.sessionUser);
-                        option.setTitle("DSL Inventory System | Item Option");
-                        option.pack();
-                        option.setLocationRelativeTo(null);
-                        option.setVisible(true);
+                        Main menu = new Main(this.sessionUser, "Inventory");
+                        menu.setTitle("DSL Inventory System | Main Menu");
+                        menu.pack();
+                        menu.setLocationRelativeTo(null);
+                        menu.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                        menu.setVisible(true);
                     } catch (ClassNotFoundException ex) {
                         Logger.getLogger(EditItem.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (SQLException ex) {

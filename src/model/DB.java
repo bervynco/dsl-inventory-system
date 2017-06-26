@@ -308,7 +308,7 @@ public class DB {
         ResultSet rs = ps.executeQuery();
         Item item = new Item();
         while(rs.next()){
-            item.setItemNo(Integer.toString(rs.getInt(2)));
+            item.setItemID(rs.getInt(2));
             item.setProductName(rs.getString(3));
             item.setInformation(rs.getString(4));
             item.setIpRate(rs.getString(5));

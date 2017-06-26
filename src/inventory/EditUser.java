@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -227,11 +228,12 @@ public class EditUser extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.setVisible(false);
-            UserSection option = new UserSection(this.sessionUser);
-            option.setTitle("DSL Inventory System | Employees Sections");
-            option.pack();
-            option.setLocationRelativeTo(null);
-            option.setVisible(true);
+            Main menu = new Main(this.sessionUser, "Users");
+            menu.setTitle("DSL Inventory System | Main Menu");
+            menu.pack();
+            menu.setLocationRelativeTo(null);
+            menu.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            menu.setVisible(true);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -264,11 +266,12 @@ public class EditUser extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(panel, "User Updated", "Success", JOptionPane.INFORMATION_MESSAGE);
                     db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Edit User Page", "Edit");
                     this.setVisible(false);
-                    UserSection option = new UserSection(this.sessionUser);
-                    option.setTitle("DSL Inventory System | Employees Sections");
-                    option.pack();
-                    option.setLocationRelativeTo(null);
-                    option.setVisible(true);
+                    Main menu = new Main(this.sessionUser, "Users");
+                    menu.setTitle("DSL Inventory System | Main Menu");
+                    menu.pack();
+                    menu.setLocationRelativeTo(null);
+                    menu.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    menu.setVisible(true);
                 }
                 else{
                     JOptionPane.showMessageDialog(panel, "System Error. Contact System Administrator", "Error", JOptionPane.INFORMATION_MESSAGE);
@@ -308,11 +311,12 @@ public class EditUser extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(panel, "System Error.", "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
                 this.setVisible(false);
-                UserSection option = new UserSection(this.sessionUser);
-                option.setTitle("DSL Inventory System | Employees Sections");
-                option.pack();
-                option.setLocationRelativeTo(null);
-                option.setVisible(true);
+                Main menu = new Main(this.sessionUser, "Users");
+                menu.setTitle("DSL Inventory System | Main Menu");
+                menu.pack();
+                menu.setLocationRelativeTo(null);
+                menu.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                menu.setVisible(true);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(EditUser.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
