@@ -256,21 +256,41 @@ public class DB {
         
         int rows = ps.executeUpdate();
         if(rows > 0){
-            return "Successful";
+           String status = this.addStockItem(itemID, productName, quantity, threshold);
+           return status;
         }
         else{
             return "Failed";
         }
     }
     
+    public static String addStockItem(int itemID, String itemName, int quantity, int threshold) throws ClassNotFoundException, SQLException{
+         Connection c = connect();
+         PreparedStatement ps = c.prepareStatement("INSERT INTO stocks(itemID, itemName, quantity, threshold) VALUES (?,?,?,?)");
+         ps.setInt(1, itemID);
+         ps.setString(2, itemName);
+         ps.setInt(3, quantity);
+         ps.setInt(4, threshold);
+         
+         int rows = ps.executeUpdate();
+         if(rows > 0){
+            return "Successful";
+            
+        }
+        else{
+            return "Failed";
+        }
+         
+    }
     public static List<Item> getItems() throws ClassNotFoundException, SQLException{
         List<Item> items = new ArrayList<Item>();
         Connection c = connect();
         
-        PreparedStatement ps = c.prepareStatement("Select * from items order by status DESC");
+        PreparedStatement ps = c.prepareStatement("Select * from items");
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             Item item = new Item();
+            System.out.println(rs.getInt(2));
             item.setItemNo(Integer.toString(rs.getInt(2)));
             item.setProductName(rs.getString(3));
             item.setInformation(rs.getString(4));
@@ -330,6 +350,7 @@ public class DB {
             item.setAc(rs.getString(21));
             item.setDc(rs.getString(22));
             item.setRemarks(rs.getString(23));
+            item.setStatus(rs.getString(24));
         }
         c.close();
         return item;

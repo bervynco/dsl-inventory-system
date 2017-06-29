@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import model.DB;
@@ -190,11 +191,12 @@ public class AddUser extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(panel, "User Registered", "Success", JOptionPane.INFORMATION_MESSAGE);
                     db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Add User", "Save");
                     this.setVisible(false);
-                    UserSection option = new UserSection(this.sessionUser);
-                    option.setTitle("DSL Inventory System | Employees Sections");
-                    option.pack();
-                    option.setLocationRelativeTo(null);
-                    option.setVisible(true);
+                    Main main = new Main(this.sessionUser, "Users");
+                    main.setTitle("DSL Inventory System | Main");
+                    main.pack();
+                    main.setLocationRelativeTo(null);
+                    main.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    main.setVisible(true);
                 }
                 else{
                     JOptionPane.showMessageDialog(panel, "System Error. Contact System Administrator", "Error", JOptionPane.INFORMATION_MESSAGE);

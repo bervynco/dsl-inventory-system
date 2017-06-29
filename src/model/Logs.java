@@ -10,49 +10,51 @@ package model;
  * @author L R E
  */
 public class Logs {
-    private static int employeeID;
-    private static String fullName;
-    private static String pageName;
-    private static String action;
-    private static String timestamp;
+    private int employeeID;
+    private String fullName;
+    private String pageName;
+    private String action;
+    private String timestamp;
 
-    public static int getEmployeeID() {
+    public int getEmployeeID() {
         return employeeID;
     }
 
-    public static void setEmployeeID(int employeeID) {
-        Logs.employeeID = employeeID;
+    public void setEmployeeID(int employeeID) {
+        this.employeeID = employeeID;
     }
 
-    public static String getFullName() {
+    public String getFullName() {
         return fullName;
     }
 
-    public static void setFullName(String fullName) {
-        Logs.fullName = fullName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
-    public static String getPageName() {
+    public String getPageName() {
         return pageName;
     }
 
-    public static void setPageName(String pageName) {
-        Logs.pageName = pageName;
+    public void setPageName(String pageName) {
+        this.pageName = pageName;
     }
 
-    public static String getAction() {
+    public String getAction() {
         return action;
     }
 
-    public static void setAction(String action) {
-        Logs.action = action;
+    public void setAction(String action) {
+        this.action = action;
     }
 
-    public static String getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public static void setTimestamp(String timestamp) {
-        Logs.timestamp = timestamp;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
+
+    
 }

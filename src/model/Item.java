@@ -10,221 +10,230 @@ package model;
  * @author L R E
  */
 public class Item {
-    private static int itemID;
-    private static String ac;
-    private static String batchNo;
-    private static String beamAngle;
-    private static String colorTemp;
-    private static String cri;
-    private static String dc;
-    private static String image;
-    private static String information;
-    private static String ipRate;
-    private static String itemNo;
-    private static String kelvin;
-    private static String locationNo;
-    private static String lumens;
-    private static String power;
-    private static String productName;
-    private static String rackNo;
-    private static String remarks;
-    private static String rowNo;
-    private static String size;
-    private static int quantity;
-    private static int threshold;
-    private static String wattage;
-    private static String productionDate;
+    private int itemID;
+    private String ac;
+    private String batchNo;
+    private String beamAngle;
+    private String colorTemp;
+    private String cri;
+    private String dc;
+    private String image;
+    private String information;
+    private String ipRate;
+    private String itemNo;
+    private String kelvin;
+    private String locationNo;
+    private String lumens;
+    private String power;
+    private String productName;
+    private String rackNo;
+    private String remarks;
+    private String rowNo;
+    private String size;
+    private int quantity;
+    private int threshold;
+    private String wattage;
+    private String productionDate;
+    private String status;
 
-    public static int getItemID() {
+    public int getItemID() {
         return itemID;
     }
 
-    public static void setItemID(int itemID) {
-        Item.itemID = itemID;
+    public void setItemID(int itemID) {
+        this.itemID = itemID;
     }
 
-    public static String getAc() {
+    public String getAc() {
         return ac;
     }
 
-    public static void setAc(String ac) {
-        Item.ac = ac;
+    public void setAc(String ac) {
+        this.ac = ac;
     }
 
-    public static String getBatchNo() {
+    public String getBatchNo() {
         return batchNo;
     }
 
-    public static void setBatchNo(String batchNo) {
-        Item.batchNo = batchNo;
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
     }
 
-    public static String getBeamAngle() {
+    public String getBeamAngle() {
         return beamAngle;
     }
 
-    public static void setBeamAngle(String beamAngle) {
-        Item.beamAngle = beamAngle;
+    public void setBeamAngle(String beamAngle) {
+        this.beamAngle = beamAngle;
     }
 
-    public static String getColorTemp() {
+    public String getColorTemp() {
         return colorTemp;
     }
 
-    public static void setColorTemp(String colorTemp) {
-        Item.colorTemp = colorTemp;
+    public void setColorTemp(String colorTemp) {
+        this.colorTemp = colorTemp;
     }
 
-    public static String getCri() {
+    public String getCri() {
         return cri;
     }
 
-    public static void setCri(String cri) {
-        Item.cri = cri;
+    public void setCri(String cri) {
+        this.cri = cri;
     }
 
-    public static String getDc() {
+    public String getDc() {
         return dc;
     }
 
-    public static void setDc(String dc) {
-        Item.dc = dc;
+    public void setDc(String dc) {
+        this.dc = dc;
     }
 
-    public static String getImage() {
+    public String getImage() {
         return image;
     }
 
-    public static void setImage(String image) {
-        Item.image = image;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public static String getInformation() {
+    public String getInformation() {
         return information;
     }
 
-    public static void setInformation(String information) {
-        Item.information = information;
+    public void setInformation(String information) {
+        this.information = information;
     }
 
-    public static String getIpRate() {
+    public String getIpRate() {
         return ipRate;
     }
 
-    public static void setIpRate(String ipRate) {
-        Item.ipRate = ipRate;
+    public void setIpRate(String ipRate) {
+        this.ipRate = ipRate;
     }
 
-    public static String getItemNo() {
+    public String getItemNo() {
         return itemNo;
     }
 
-    public static void setItemNo(String itemNo) {
-        Item.itemNo = itemNo;
+    public void setItemNo(String itemNo) {
+        this.itemNo = itemNo;
     }
 
-    public static String getKelvin() {
+    public String getKelvin() {
         return kelvin;
     }
 
-    public static void setKelvin(String kelvin) {
-        Item.kelvin = kelvin;
+    public void setKelvin(String kelvin) {
+        this.kelvin = kelvin;
     }
 
-    public static String getLocationNo() {
+    public String getLocationNo() {
         return locationNo;
     }
 
-    public static void setLocationNo(String locationNo) {
-        Item.locationNo = locationNo;
+    public void setLocationNo(String locationNo) {
+        this.locationNo = locationNo;
     }
 
-    public static String getLumens() {
+    public String getLumens() {
         return lumens;
     }
 
-    public static void setLumens(String lumens) {
-        Item.lumens = lumens;
+    public void setLumens(String lumens) {
+        this.lumens = lumens;
     }
 
-    public static String getPower() {
+    public String getPower() {
         return power;
     }
 
-    public static void setPower(String power) {
-        Item.power = power;
+    public void setPower(String power) {
+        this.power = power;
     }
 
-    public static String getProductName() {
+    public String getProductName() {
         return productName;
     }
 
-    public static void setProductName(String productName) {
-        Item.productName = productName;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public static String getRackNo() {
+    public String getRackNo() {
         return rackNo;
     }
 
-    public static void setRackNo(String rackNo) {
-        Item.rackNo = rackNo;
+    public void setRackNo(String rackNo) {
+        this.rackNo = rackNo;
     }
 
-    public static String getRemarks() {
+    public String getRemarks() {
         return remarks;
     }
 
-    public static void setRemarks(String remarks) {
-        Item.remarks = remarks;
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
-    public static String getRowNo() {
+    public String getRowNo() {
         return rowNo;
     }
 
-    public static void setRowNo(String rowNo) {
-        Item.rowNo = rowNo;
+    public void setRowNo(String rowNo) {
+        this.rowNo = rowNo;
     }
 
-    public static String getSize() {
+    public String getSize() {
         return size;
     }
 
-    public static void setSize(String size) {
-        Item.size = size;
+    public void setSize(String size) {
+        this.size = size;
     }
 
-    public static int getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public static void setQuantity(int quantity) {
-        Item.quantity = quantity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
-    
-    public static int getThreshold() {
+
+    public int getThreshold() {
         return threshold;
     }
 
-    public static void setThreshold(int threshold) {
-        Item.threshold = threshold;
+    public void setThreshold(int threshold) {
+        this.threshold = threshold;
     }
 
-    public static String getWattage() {
+    public String getWattage() {
         return wattage;
     }
 
-    public static void setWattage(String wattage) {
-        Item.wattage = wattage;
+    public void setWattage(String wattage) {
+        this.wattage = wattage;
     }
 
-    public static String getProductionDate() {
+    public String getProductionDate() {
         return productionDate;
     }
 
-    public static void setProductionDate(String productionDate) {
-        Item.productionDate = productionDate;
+    public void setProductionDate(String productionDate) {
+        this.productionDate = productionDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
     
     

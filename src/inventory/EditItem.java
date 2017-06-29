@@ -40,6 +40,7 @@ public class EditItem extends javax.swing.JFrame {
         Item item = new Item();
         item =  db.getItemDetails(itemID);
         // String[] name = user.getFullName().split(" ");
+        System.out.println(item.getAc());
         txtAc.setText(item.getAc());
         txtBatchNo.setText(item.getBatchNo());
         txtBeamAngle.setText(item.getBeamAngle());
@@ -86,6 +87,8 @@ public class EditItem extends javax.swing.JFrame {
         }
     }
     public EditItem(User user, int itemID) throws ClassNotFoundException, SQLException, IOException{
+        initComponents();
+        this.sessionUser = user;
         this.setEditableFields(itemID);
     }
 

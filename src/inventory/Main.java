@@ -21,6 +21,8 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import model.DB;
 import model.Item;
+import model.Logs;
+import model.Stock;
 import model.Transactions;
 import model.User;
 
@@ -35,7 +37,7 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-    private static String currentMenu = "Inventory";
+    private static String currentMenu = null;
     
     private static User sessionUser = null;
     public Main(User user, String currentMenu) throws SQLException, ClassNotFoundException, ParseException {
@@ -51,17 +53,24 @@ public class Main extends javax.swing.JFrame {
         
     }
     public void setLabelTitle(){
+        System.out.println(this.currentMenu);
         if(this.currentMenu.equals("Inventory"))
-            lblTitle.setText("List of Inventory Items");
+            lblTitle.setText("List of Inventory Stocks");
         else if(this.currentMenu.equals("Transactions"))
             lblTitle.setText("List of Transactions");
         else if(this.currentMenu.equals("Users"))
             lblTitle.setText("List of Users");
+        else if(this.currentMenu.equals("Items"))
+            lblTitle.setText("List of Inventory Items");
+        else if(this.currentMenu.equals("Logs")){
+            lblTitle.setText("List of Logs");
+        }
+        else;
     }
     public void setButtonVisibility(){
         btnAdd.setLabel("Add");
         btnScan.setLabel("Scan");
-        if(this.currentMenu.equals("Inventory")){
+        if(this.currentMenu.equals("Items")){
             btnAdd.setVisible(true);
             btnScan.setVisible(true);
         }
@@ -72,7 +81,14 @@ public class Main extends javax.swing.JFrame {
         else if(this.currentMenu.equals("Users")){
             btnAdd.setVisible(true);
             btnScan.setVisible(false);
-            btnAdd.setLabel("Add");
+        }
+        else if(this.currentMenu.equals("Inventory")){
+            btnAdd.setVisible(true);
+            btnScan.setVisible(true);
+        }
+        else if(this.currentMenu.equals("Logs")){
+            btnAdd.setVisible(false);
+            btnScan.setVisible(false);
         }
     }
 //    public void FillComboBox() throws SQLException, ClassNotFoundException{
@@ -149,14 +165,10 @@ public class Main extends javax.swing.JFrame {
                 model.addRow(rowData);
             }
         }
-        else if(this.currentMenu.equals("Inventory")){
+        else if(this.currentMenu.equals("Items")){
+            System.out.println("Items");
             List<Item> items = new ArrayList<Item>();
-//            if(this.currentFilter.equals("No Filter")){
-//                
-//            }
-//            else{
-//                items = db.filterItems(this.currentFilter);
-//            }
+
             items = db.getItems();
             model.addColumn("Item No");
             model.addColumn("Product Name");
@@ -178,9 +190,9 @@ public class Main extends javax.swing.JFrame {
             model.addColumn("Size");
             model.addColumn("AC");
             model.addColumn("DC");
-            model.addColumn("Remarks");
 
             for(int i = 0; i < items.size(); i++){
+                //System.out.println(items.get(i).getItemNo());
                 Object [] rowData = {
                     items.get(i).getItemNo(),
                     items.get(i).getProductName(),
@@ -201,8 +213,50 @@ public class Main extends javax.swing.JFrame {
                     items.get(i).getPower(),
                     items.get(i).getSize(),
                     items.get(i).getAc(),
-                    items.get(i).getDc(),
-                    items.get(i).getRemarks()
+                    items.get(i).getDc()
+                };
+                model.addRow(rowData);
+            }
+        }
+        else if(this.currentMenu.equals("Inventory")){
+            List<Stock> items = new ArrayList<Stock>();
+
+            // items = db.getItems();
+            model.addColumn("Item ID");
+            model.addColumn("Item Name");
+            model.addColumn("Quantity");
+            model.addColumn("Threshold");
+            model.addColumn("Status");
+            model.addColumn("Replenished Date");
+            
+            for(int i = 0; i < items.size(); i++){
+                Object [] rowData = {
+                    items.get(i).getItemID(),
+                    items.get(i).getItemName(),
+                    items.get(i).getQuantity(),
+                    items.get(i).getThreshold(),
+                    items.get(i).getReplenishDate()
+                };
+                model.addRow(rowData);
+            }
+        }
+        else if(this.currentMenu.equals("Logs")){
+            List<Logs> logs = new ArrayList<Logs>();
+
+            // items = db.getItems();
+            model.addColumn("Employee ID");
+            model.addColumn("Full Name");
+            model.addColumn("Page Visited");
+            model.addColumn("Action");
+            model.addColumn("Timestamp");
+            
+            for(int i = 0; i < logs.size(); i++){
+                Object [] rowData = {
+                    logs.get(i).getEmployeeID(),
+                    logs.get(i).getFullName(),
+                    logs.get(i).getPageName(),
+                    logs.get(i).getAction(),
+                    logs.get(i).getTimestamp()
                 };
                 model.addRow(rowData);
             }
@@ -230,6 +284,8 @@ public class Main extends javax.swing.JFrame {
         menuTransactions = new javax.swing.JMenu();
         menuUsers = new javax.swing.JMenu();
         menuInventory = new javax.swing.JMenu();
+        menuItems = new javax.swing.JMenu();
+        menuLogs = new javax.swing.JMenu();
         menuLogout = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -318,11 +374,6 @@ public class Main extends javax.swing.JFrame {
                 menuTransactionsMouseClicked(evt);
             }
         });
-        menuTransactions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuTransactionsActionPerformed(evt);
-            }
-        });
         jMenuBar1.add(menuTransactions);
 
         menuUsers.setText("Users");
@@ -342,6 +393,24 @@ public class Main extends javax.swing.JFrame {
             }
         });
         jMenuBar1.add(menuInventory);
+
+        menuItems.setText("List of Items");
+        menuItems.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        menuItems.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuItemsMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuItems);
+
+        menuLogs.setText("Logs");
+        menuLogs.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        menuLogs.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuLogsMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menuLogs);
 
         menuLogout.setText("Log Out");
         menuLogout.setFont(new java.awt.Font("Segoe UI", 2, 16)); // NOI18N
@@ -375,7 +444,7 @@ public class Main extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(employeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addContainerGap())
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1202, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -401,6 +470,8 @@ public class Main extends javax.swing.JFrame {
     private void menuTransactionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuTransactionsMouseClicked
         try {
             this.currentMenu = "Transactions";
+            this.setLabelTitle();
+            this.setButtonVisibility();
 //            btnAdd.setVisible(false);
 //            btnScan.setVisible(false);
             //lblTitle.setText("List of Transactions");
@@ -416,14 +487,12 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_menuTransactionsMouseClicked
 
-    private void menuTransactionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransactionsActionPerformed
-
-    }//GEN-LAST:event_menuTransactionsActionPerformed
-
     private void menuUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuUsersMouseClicked
         try {
             // TODO add your handling code here:
             this.currentMenu = "Users";
+            this.setLabelTitle();
+            this.setButtonVisibility();
 //            btnAdd.setLabel("Add");
 //            btnAdd.setVisible(true);
             //lblTitle.setText("List of Users");
@@ -443,6 +512,8 @@ public class Main extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.currentMenu = "Inventory";
+            this.setLabelTitle();
+            this.setButtonVisibility();
 //            btnScan.setVisible(true);
 //            btnScan.setLabel("Scan");
 //            btnAdd.setVisible(true);
@@ -535,7 +606,7 @@ public class Main extends javax.swing.JFrame {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        else if(this.currentMenu.equals("Inventory")){
+        else if(this.currentMenu.equals("Items")){
             this.setVisible(false);
             AddNewItem newItem = new AddNewItem(this.sessionUser);
             newItem.setTitle("DSL Inventory System | Add New Item");
@@ -545,6 +616,52 @@ public class Main extends javax.swing.JFrame {
         }
         else;
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void menuItemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuItemsMouseClicked
+         // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            this.currentMenu = "Items";
+            this.setLabelTitle();
+            this.setButtonVisibility();
+//            btnScan.setVisible(true);
+//            btnScan.setLabel("Scan");
+//            btnAdd.setVisible(true);
+//            btnAdd.setLabel("Add")
+            //this.FillComboBox();
+            DefaultTableModel model = this.FillTable(this.currentMenu);
+            tableList.setModel(model);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_menuItemsMouseClicked
+
+    private void menuLogsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuLogsMouseClicked
+        // TODO add your handling code here: // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            this.currentMenu = "Logs";
+            this.setLabelTitle();
+            this.setButtonVisibility();
+//            btnScan.setVisible(true);
+//            btnScan.setLabel("Scan");
+//            btnAdd.setVisible(true);
+//            btnAdd.setLabel("Add")
+            //this.FillComboBox();
+            DefaultTableModel model = this.FillTable(this.currentMenu);
+            tableList.setModel(model);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_menuLogsMouseClicked
 
     /**
      * @param args the command line arguments
@@ -558,7 +675,9 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JMenu menuInventory;
+    private javax.swing.JMenu menuItems;
     private javax.swing.JMenu menuLogout;
+    private javax.swing.JMenu menuLogs;
     private javax.swing.JMenu menuTransactions;
     private javax.swing.JMenu menuUsers;
     private javax.swing.JTable tableList;
