@@ -13,6 +13,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import model.DB;
 import model.User;
 
 /**
@@ -21,15 +22,20 @@ import model.User;
  */
 public class ScanPage extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ScanPage
-     */
+    DB db = new DB();
     private static User sessionUser = null;
-    public ScanPage(User user) {
+    private static Main main = null;
+    public ScanPage(User user) throws ClassNotFoundException, SQLException, ParseException {
         initComponents();
         this.sessionUser = user;
+        db.setLogStatus(this.sessionUser.getEmployeeID(), this.sessionUser.getFullName(), "Scan Item Page", "Visit");
     }
-
+    public ScanPage(User user, Main main) throws ClassNotFoundException, SQLException, ParseException {
+        initComponents();
+        this.sessionUser = user;
+        this.main = main;
+        db.setLogStatus(this.sessionUser.getEmployeeID(), this.sessionUser.getFullName(), "Scan Item Page", "Visit");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -120,19 +126,35 @@ public class ScanPage extends javax.swing.JFrame {
 
     private void txtScanKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtScanKeyTyped
         // TODO add your handling code here:
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-              // Your database code here\
-              System.out.println(txtScan.getText());
-            }
-          }, 1*1000);
+//        Timer timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//              // Your database code here\
+//              System.out.println(txtScan.getText());
+//            }
+//          }, 1*1000);
     }//GEN-LAST:event_txtScanKeyTyped
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        // TODO add your handling code here:
-        int id = Integer.parseInt(txtScan.getText())  ;
+        try {
+            // TODO add your handling code here:
+            int id = Integer.parseInt(txtScan.getText())  ;
+            this.setVisible(false);
+            this.main.setVisible(false);
+            ScanItem item = new ScanItem(this.sessionUser, id);
+            item.setTitle("DSL Inventory System | Main");
+            item.pack();
+            item.setLocationRelativeTo(null);
+            item.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ScanPage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ScanPage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(ScanPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

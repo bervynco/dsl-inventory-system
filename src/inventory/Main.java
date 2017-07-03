@@ -5,6 +5,8 @@
  */
 package inventory;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import model.DB;
 import model.Item;
@@ -40,6 +44,8 @@ public class Main extends javax.swing.JFrame {
     private static String currentMenu = null;
     
     private static User sessionUser = null;
+    DB db = new DB();
+    private String itemStatus = null;
     public Main(User user, String currentMenu) throws SQLException, ClassNotFoundException, ParseException {
         initComponents();
         this.sessionUser = user;
@@ -48,6 +54,7 @@ public class Main extends javax.swing.JFrame {
         tableList.setModel(model);
         //this.FillComboBox();
         employeeName.setText(this.sessionUser.getFullName());
+        db.setLogStatus(this.sessionUser.getEmployeeID(), this.sessionUser.getFullName(), "Main Menu", "Visit");
         this.setLabelTitle();
         this.setButtonVisibility();
         
@@ -91,6 +98,33 @@ public class Main extends javax.swing.JFrame {
             btnScan.setVisible(false);
         }
     }
+    
+    public void setTableRenderer(){
+        tableList.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+                if(currentMenu.equals("Inventory")){
+                    if (itemStatus.equals("Bad")) {       
+                        setBackground(Color.RED);
+                        setForeground(Color.BLACK);
+                    } else {
+                        setBackground(table.getBackground());
+                        setForeground(table.getForeground());
+                    }
+                }
+                else{
+                    setBackground(table.getBackground());
+                    setForeground(table.getForeground());
+                }
+
+                return this;
+            }   
+        });
+    }
 //    public void FillComboBox() throws SQLException, ClassNotFoundException{
 //        comboBoxEmployees.removeAllItems();
 //        comboBoxEmployees.addItem("No Filter");
@@ -117,12 +151,7 @@ public class Main extends javax.swing.JFrame {
         DB db = new DB();
         if(this.currentMenu.equals("Transactions")){
             List<Transactions> transactions = new ArrayList<Transactions>();
-//            if(this.currentFilter.equals("No Filter")){
-//                
-//            }
-//            else{
-//                transactions = db.filterTransactions(this.currentFilter);
-//            }
+
             transactions = db.getAllTransactions();
             model.addColumn("Employee ID");
             model.addColumn("Employee Name");
@@ -133,6 +162,7 @@ public class Main extends javax.swing.JFrame {
             model.addColumn("Transaction Date");
             
             for(int i = 0; i < transactions.size(); i++){
+                this.setTableRenderer();
                 Object [] rowData = {
                     transactions.get(i).getEmployeeID(), 
                     transactions.get(i).getEmployeeName(), 
@@ -147,21 +177,19 @@ public class Main extends javax.swing.JFrame {
         }
         else if(this.currentMenu.equals("Users")){
             List<User> employees = new ArrayList<User>();
-            
-//            if(this.currentFilter.equals("No Filter")){
-//                
-//            }
-//            else{
-//                int id = Integer.parseInt(this.currentFilter);
-//                employees = db.filterUsers(id);
-//            }
+
             employees = db.getUsers();
             model.addColumn("Employee ID");
             model.addColumn("Name");
             model.addColumn("Role");
 
             for(int i = 0; i < employees.size(); i++){
-                Object [] rowData = {employees.get(i).getEmployeeID(), employees.get(i).getFullName(), employees.get(i).getRole()};
+                 this.setTableRenderer();
+                Object [] rowData = {
+                    employees.get(i).getEmployeeID(), 
+                    employees.get(i).getFullName(), 
+                    employees.get(i).getRole()
+                };
                 model.addRow(rowData);
             }
         }
@@ -193,6 +221,7 @@ public class Main extends javax.swing.JFrame {
 
             for(int i = 0; i < items.size(); i++){
                 //System.out.println(items.get(i).getItemNo());
+                this.setTableRenderer();
                 Object [] rowData = {
                     items.get(i).getItemNo(),
                     items.get(i).getProductName(),
@@ -221,7 +250,7 @@ public class Main extends javax.swing.JFrame {
         else if(this.currentMenu.equals("Inventory")){
             List<Stock> items = new ArrayList<Stock>();
 
-            // items = db.getItems();
+            items = db.getAllStocks();
             model.addColumn("Item ID");
             model.addColumn("Item Name");
             model.addColumn("Quantity");
@@ -230,11 +259,17 @@ public class Main extends javax.swing.JFrame {
             model.addColumn("Replenished Date");
             
             for(int i = 0; i < items.size(); i++){
+                this.itemStatus = "Good";
+                if(items.get(i).getStatus() != 0){
+                    this.itemStatus = "Bad";
+                }
+                this.setTableRenderer();
                 Object [] rowData = {
                     items.get(i).getItemID(),
                     items.get(i).getItemName(),
                     items.get(i).getQuantity(),
                     items.get(i).getThreshold(),
+                    this.itemStatus,
                     items.get(i).getReplenishDate()
                 };
                 model.addRow(rowData);
@@ -243,7 +278,7 @@ public class Main extends javax.swing.JFrame {
         else if(this.currentMenu.equals("Logs")){
             List<Logs> logs = new ArrayList<Logs>();
 
-            // items = db.getItems();
+            logs = db.getLogs();
             model.addColumn("Employee ID");
             model.addColumn("Full Name");
             model.addColumn("Page Visited");
@@ -251,6 +286,7 @@ public class Main extends javax.swing.JFrame {
             model.addColumn("Timestamp");
             
             for(int i = 0; i < logs.size(); i++){
+                this.setTableRenderer();
                 Object [] rowData = {
                     logs.get(i).getEmployeeID(),
                     logs.get(i).getFullName(),
@@ -537,11 +573,19 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_menuLogoutMouseClicked
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
-        ScanPage scan = new ScanPage(this.sessionUser);
-        scan.setTitle("DSL Inventory System | Scan");
-        scan.pack();
-        scan.setLocationRelativeTo(null);
-        scan.setVisible(true);
+        try {
+            ScanPage scan = new ScanPage(this.sessionUser, this);
+            scan.setTitle("DSL Inventory System | Scan");
+            scan.pack();
+            scan.setLocationRelativeTo(null);
+            scan.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnScanActionPerformed
 
     private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
@@ -607,6 +651,14 @@ public class Main extends javax.swing.JFrame {
             }
         }
         else if(this.currentMenu.equals("Items")){
+            this.setVisible(false);
+            AddNewItem newItem = new AddNewItem(this.sessionUser);
+            newItem.setTitle("DSL Inventory System | Add New Item");
+            newItem.pack();
+            newItem.setLocationRelativeTo(null);
+            newItem.setVisible(true);
+        }
+        else if(this.currentMenu.equals("Inventory")){
             this.setVisible(false);
             AddNewItem newItem = new AddNewItem(this.sessionUser);
             newItem.setTitle("DSL Inventory System | Add New Item");

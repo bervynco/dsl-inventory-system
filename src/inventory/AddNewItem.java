@@ -90,6 +90,8 @@ public class AddNewItem extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtRemarks = new javax.swing.JTextArea();
         dpProductionDate = new com.github.lgooddatepicker.components.DatePicker();
+        jLabel6 = new javax.swing.JLabel();
+        txtQuantity = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -173,12 +175,15 @@ public class AddNewItem extends javax.swing.JFrame {
         jLabel25.setText("Remarks:");
         jLabel25.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        jLabel27.setText("Threshold");
+        jLabel27.setText("Threshold:");
         jLabel27.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         txtRemarks.setColumns(20);
         txtRemarks.setRows(5);
         jScrollPane1.setViewportView(txtRemarks);
+
+        jLabel6.setText("Quantity:");
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -244,7 +249,8 @@ public class AddNewItem extends javax.swing.JFrame {
                                                 .addComponent(jLabel20)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(jLabel27)
-                                                    .addComponent(jLabel24)))
+                                                    .addComponent(jLabel24)
+                                                    .addComponent(jLabel6)))
                                             .addGap(29, 29, 29)
                                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                 .addComponent(txtRowNo, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
@@ -252,7 +258,8 @@ public class AddNewItem extends javax.swing.JFrame {
                                                 .addComponent(txtWattage)
                                                 .addComponent(txtColorTemp)
                                                 .addComponent(txtBeamAngle)
-                                                .addComponent(txtThreshold)))
+                                                .addComponent(txtThreshold)
+                                                .addComponent(txtQuantity)))
                                         .addComponent(txtIpRate, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(120, 120, 120)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,7 +317,7 @@ public class AddNewItem extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(70, 70, 70)
                                         .addComponent(btnAddItem)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, 0)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -403,10 +410,14 @@ public class AddNewItem extends javax.swing.JFrame {
                             .addComponent(txtThreshold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel23)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnAddItem)
                             .addComponent(btnCancel))))
@@ -441,8 +452,9 @@ public class AddNewItem extends javax.swing.JFrame {
             int threshold = Integer.parseInt(txtThreshold.getText());
             String productionDate = dpProductionDate.getDateStringOrEmptyString();
             String wattage = txtWattage.getText();
+            int quantity = Integer.parseInt(txtQuantity.getText());
             String status = db.addItem(ac, batchNo, colorTemp, cri, dc, image, information, ipRate, itemNo, kelvin, locationNo, lumens,
-                    power, productName, rackNo, remarks, rowNo, size, threshold, threshold, wattage, beamAngle, productionDate);
+                    power, productName, rackNo, remarks, rowNo, size, quantity, threshold, wattage, beamAngle, productionDate);
         
             if(status == "Successful"){
                 JOptionPane.showMessageDialog(panel, "Item Added", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -518,6 +530,7 @@ public class AddNewItem extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -537,6 +550,7 @@ public class AddNewItem extends javax.swing.JFrame {
     private javax.swing.JTextField txtLumens;
     private javax.swing.JTextField txtPower;
     private javax.swing.JTextField txtProductName;
+    private javax.swing.JTextField txtQuantity;
     private javax.swing.JTextField txtRackNo;
     private javax.swing.JTextArea txtRemarks;
     private javax.swing.JTextField txtRowNo;

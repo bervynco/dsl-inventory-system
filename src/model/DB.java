@@ -205,7 +205,31 @@ public class DB {
         c.close();
         return employees;
     }
-    
+    public List<Logs> getLogs() throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        
+        ArrayList<Logs> logs = new ArrayList<Logs>();
+        PreparedStatement ps = c.prepareStatement("SELECT employee_id, name, page, action, log_date from logs where month(log_date) = ?"+
+                " and year(log_date) = ?");
+        ps.setInt(1, month);
+        ps.setInt(2, year);
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while(rs.next()){
+            Logs log = new Logs();
+            log.setEmployeeID(rs.getInt(1));
+            log.setFullName(rs.getString(2));
+            log.setPageName(rs.getString(3));
+            log.setAction(rs.getString(4));
+            log.setTimestamp(rs.getDate(5).toString());
+            logs.add(log);
+        }
+        return logs;
+    }
     public static void setLogStatus(int employeeID, String name, String page, String action) throws ClassNotFoundException, SQLException, ParseException{
         Timestamp dateToday = DB.getDateToday();
         //java.sql.Date.
@@ -281,6 +305,45 @@ public class DB {
             return "Failed";
         }
          
+    }
+    public List<Stock> getAllStocks() throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        
+        ArrayList<Stock> stocks = new ArrayList<Stock>();
+        PreparedStatement ps = c.prepareStatement("Select id, itemID, itemName, quantity, threshold,"+
+                "status from stocks");
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while(rs.next()){
+            Stock stock = new Stock();
+            stock.setId(rs.getInt(1));
+            stock.setItemID(rs.getInt(2));
+            stock.setItemName(rs.getString(3));
+            stock.setQuantity(rs.getInt(4));
+            stock.setThreshold(rs.getInt(5));
+            stock.setStatus(rs.getInt(6));
+            
+            stocks.add(stock);
+        }
+        return stocks;
+    }
+    public Stock getStockItem(int itemID) throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("Select * from stocks where itemID = ?");
+        ps.setInt(1, itemID);
+        ResultSet rs = ps.executeQuery();
+        Stock stock = new Stock();
+        while(rs.next()){
+            stock.setId(rs.getInt(1));
+            stock.setItemID(rs.getInt(2));
+            stock.setItemName(rs.getString(3));
+            stock.setQuantity(rs.getInt(4));
+            stock.setThreshold(rs.getInt(5));
+            stock.setStatus(rs.getInt(6));
+            stock.setReplenishDate(rs.getTimestamp(8));
+        }
+        return stock;
     }
     public static List<Item> getItems() throws ClassNotFoundException, SQLException{
         List<Item> items = new ArrayList<Item>();
