@@ -8,6 +8,9 @@ package inventory;
 import java.awt.Color;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
 import model.DB;
 import model.Stock;
 import model.User;
@@ -22,10 +25,12 @@ public class ScanItem extends javax.swing.JFrame {
      * Creates new form ScanItem
      */
     private static User sessionUser = null;
+    private int itemID = 0;
     DB db = new DB();
     public ScanItem(User user, int itemID) throws ClassNotFoundException, SQLException, ParseException {
         initComponents();
         this.sessionUser = user;
+        this.itemID = itemID;
         db.setLogStatus(this.sessionUser.getEmployeeID(), this.sessionUser.getFullName(), "Scan Item Page", "Visit");
         this.setFieldValues(itemID);
     }
@@ -67,10 +72,12 @@ public class ScanItem extends javax.swing.JFrame {
         lblQuantity = new javax.swing.JLabel();
         lblThreshold = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnReplenish = new javax.swing.JButton();
+        btnDeplete = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         lblStatus = new javax.swing.JLabel();
+        btnTransact = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,19 +105,45 @@ public class ScanItem extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel9.setText("Item Details");
 
-        jButton1.setBackground(new java.awt.Color(0, 255, 0));
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton1.setText("Replenish Stock");
+        btnReplenish.setBackground(new java.awt.Color(0, 255, 0));
+        btnReplenish.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnReplenish.setText("Replenish Stock");
+        btnReplenish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReplenishActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(new java.awt.Color(255, 0, 0));
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton2.setText("Deplete Stock");
-        jButton2.setToolTipText("");
+        btnDeplete.setBackground(new java.awt.Color(255, 0, 0));
+        btnDeplete.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnDeplete.setText("Deplete Stock");
+        btnDeplete.setToolTipText("");
+        btnDeplete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDepleteActionPerformed(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel10.setText("Status:");
 
         lblStatus.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+
+        btnTransact.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnTransact.setText("Transact");
+        btnTransact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransactActionPerformed(evt);
+            }
+        });
+
+        btnCancel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -119,11 +152,6 @@ public class ScanItem extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 116, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -142,7 +170,16 @@ public class ScanItem extends javax.swing.JFrame {
                                         .addComponent(lblStatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
                                         .addComponent(lblThreshold, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(lblQuantity, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnCancel)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDeplete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnReplenish)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnTransact, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -172,18 +209,87 @@ public class ScanItem extends javax.swing.JFrame {
                     .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(58, Short.MAX_VALUE))
+                    .addComponent(btnReplenish)
+                    .addComponent(btnDeplete)
+                    .addComponent(btnTransact)
+                    .addComponent(btnCancel))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnTransactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransactActionPerformed
+        try {
+            // TODO add your handling code here:
+            this.setVisible(false);
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, itemID, "Transact");
+            item.setTitle("DSL Inventory System | Checkout");
+            item.pack();
+            item.setLocationRelativeTo(null);
+            item.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btnTransactActionPerformed
+
+    private void btnReplenishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplenishActionPerformed
+        try {
+            this.setVisible(false);
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, itemID, "Replenish");
+            item.setTitle("DSL Inventory System | Checkout");
+            item.pack();
+            item.setLocationRelativeTo(null);
+            item.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnReplenishActionPerformed
+
+    private void btnDepleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepleteActionPerformed
+        try {
+            this.setVisible(false);
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, itemID, "Deplete ");
+            item.setTitle("DSL Inventory System | Checkout");
+            item.pack();
+            item.setLocationRelativeTo(null);
+            item.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDepleteActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        try {
+            this.setVisible(false);
+            Main main = new Main(this.sessionUser, "Inventory");
+            main.setTitle("DSL Inventory System | Main");
+            main.pack();
+            main.setLocationRelativeTo(null);
+            main.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            main.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnCancelActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnDeplete;
+    private javax.swing.JButton btnReplenish;
+    private javax.swing.JButton btnTransact;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;

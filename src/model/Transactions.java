@@ -18,6 +18,7 @@ public class Transactions {
     private String itemName;
     private int quantity;
     private String type;
+    private String note;
     private Date transactionDate;
 
     public int getEmployeeID() {
@@ -68,6 +69,14 @@ public class Transactions {
         this.type = type;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+    
     public Date getTransactionDate() {
         return transactionDate;
     }

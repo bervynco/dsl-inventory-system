@@ -161,6 +161,7 @@ public class ScanPage extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.setVisible(false);
+            this.main.setVisible(false);
             Main main = new Main(this.sessionUser, "Inventory");
             main.setTitle("DSL Inventory System | Main");
             main.pack();

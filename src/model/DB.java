@@ -345,6 +345,55 @@ public class DB {
         }
         return stock;
     }
+    
+    public String transactStock(User user, int itemID, String itemName, String action, int quantity, String note) throws ClassNotFoundException, SQLException {
+        Connection c = connect();
+        PreparedStatement psQuantity = c.prepareStatement("Select quantity from stocks where itemID = ?");
+        psQuantity.setInt(1, itemID);
+        ResultSet rs = psQuantity.executeQuery();
+        rs.first();
+        int overallQuantity = rs.getInt(1);
+        int updateQuantity = 0;
+        
+        if(action.equals("Replenish")){
+            updateQuantity = overallQuantity + quantity;
+        }
+        else if(action.equals("Deplete")){
+            updateQuantity = 0;
+        }
+        else if(action.equals("Damage")){
+            updateQuantity = overallQuantity - quantity;
+        }
+        else if(action.equals("Transact")){
+            updateQuantity = overallQuantity - quantity;
+        }
+        else;
+        PreparedStatement ps = c.prepareStatement("UPDATE stocks SET quantity = ? WHERE itemID = ? ");
+        ps.setInt(1, updateQuantity);
+        ps.setInt(2, itemID);
+        ps.executeUpdate();
+        //id, employeeID, employeeName, itemID, item, quantity, type, note, transactionDate
+        PreparedStatement psTransact = c.prepareStatement("INSERT INTO transactions(employeeID, employeeName, itemID, item, quantity, type, note) VALUES(?,?,?,?,?,?,?)");
+        psTransact.setInt(1, user.getEmployeeID());
+        psTransact.setString(2, user.getFullName());
+        psTransact.setInt(3, itemID);
+        psTransact.setString(4, itemName);
+        psTransact.setInt(5, quantity);
+        psTransact.setString(6, action);
+        psTransact.setString(7, note);
+        
+        int rows = psTransact.executeUpdate();
+        c.close();
+        if(rows > 0){
+            return "Successful";
+        }
+        else{
+            return "Failed";
+        }
+        
+    }
+    
+    
     public static List<Item> getItems() throws ClassNotFoundException, SQLException{
         List<Item> items = new ArrayList<Item>();
         Connection c = connect();
@@ -572,6 +621,5 @@ public class DB {
         }
         return transactions;
     }
-    
-    
+
 }
