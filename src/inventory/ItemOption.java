@@ -284,12 +284,20 @@ public class ItemOption extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteItemActionPerformed
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
-        // TODO add your handling code here:
-        ScanPage page = new ScanPage(this.sessionUser);
-        page.setTitle("DSL Inventory System | List of Items");
-        page.pack();
-        page.setLocationRelativeTo(null);
-        page.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            ScanPage page = new ScanPage(this.sessionUser);
+            page.setTitle("DSL Inventory System | List of Items");
+            page.pack();
+            page.setLocationRelativeTo(null);
+            page.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(ItemOption.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnScanActionPerformed
 
 

@@ -40,7 +40,6 @@ public class EditItem extends javax.swing.JFrame {
         Item item = new Item();
         item =  db.getItemDetails(itemID);
         // String[] name = user.getFullName().split(" ");
-        System.out.println(item.getAc());
         txtAc.setText(item.getAc());
         txtBatchNo.setText(item.getBatchNo());
         txtBeamAngle.setText(item.getBeamAngle());
@@ -50,7 +49,7 @@ public class EditItem extends javax.swing.JFrame {
         txtImage.setText(item.getImage());
         txtInformation.setText(item.getInformation());
         txtIpRate.setText(item.getIpRate());
-        txtItemNo.setText(item.getItemNo());
+        txtItemNo.setText(Integer.toString(item.getItemID()));
         txtKelvin.setText(item.getKelvin());
         txtLocationNo.setText(item.getLocationNo());
         txtLumens.setText(item.getLumens());
@@ -262,8 +261,8 @@ public class EditItem extends javax.swing.JFrame {
             }
         });
 
-        jLabel28.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel28.setText("Quantity");
+        jLabel28.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

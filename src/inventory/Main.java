@@ -590,8 +590,9 @@ public class Main extends javax.swing.JFrame {
 
     private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
         int row = tableList.rowAtPoint(evt.getPoint());
-        this.setVisible(false);
+        
         if(this.currentMenu.equals("Users")){
+            this.setVisible(false);
             try {
                 int employeeID = (int) tableList.getValueAt(row, 0);
                 EditUser edit = new EditUser(this.sessionUser, employeeID);
@@ -610,9 +611,10 @@ public class Main extends javax.swing.JFrame {
             }
        }
        else if(this.currentMenu.equals("Inventory")){
+           this.setVisible(false);
             try {
-                String itemID = (String) tableList.getValueAt(row, 0);
-                EditItem edit = new EditItem(this.sessionUser, Integer.parseInt(itemID));
+                int itemID = (Integer) tableList.getValueAt(row, 0);
+                EditItem edit = new EditItem(this.sessionUser, itemID);//Integer.parseInt(itemID)
                 edit.setTitle("DSL Inventory System | Edit User");
                 edit.pack();
                 edit.setLocationRelativeTo(null);

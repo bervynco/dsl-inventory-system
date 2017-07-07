@@ -27,12 +27,17 @@ import java.util.Date;
 import java.util.List;
 
 public class DB {
+//    private static String user = "root";
+//    private static String pass = "DslDatabase";
+//    private static String host = "localhost";
+//    private static String port = "3306";
+//    private static String url = "jdbc:mysql://" + host + ":" + port + "/dsl_inventory_system";
+    
     private static String user = "root";
     private static String pass = "password";
     private static String host = "localhost";
     private static String port = "3306";
     private static String url = "jdbc:mysql://" + host + ":" + port + "/dsl_inventory_system";
-    
     public static Connection connect() throws ClassNotFoundException, SQLException {
 
        Connection conn = null;
