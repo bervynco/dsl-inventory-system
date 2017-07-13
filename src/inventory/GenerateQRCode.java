@@ -37,9 +37,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 public class GenerateQRCode {
     
-    public static void generateQRCode() throws IOException{
+    public static String generateQRCode(int itemID) throws IOException{
      String myCodeText = "https://crunchify.com/";
-        String filePath = "barcodes/qrcode.png";
+        String filePath = "C:/DSL Barcodes/" + itemID +".png";
         //String filePath = "/Users/<userName>/Documents/CrunchifyQR.png";
         int size = 250;
         String fileType = "png";
@@ -54,7 +54,7 @@ public class GenerateQRCode {
                 hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 
                 QRCodeWriter qrCodeWriter = new QRCodeWriter();
-                BitMatrix byteMatrix = qrCodeWriter.encode(myCodeText, BarcodeFormat.QR_CODE, size,
+                BitMatrix byteMatrix = qrCodeWriter.encode(Integer.toString(itemID), BarcodeFormat.QR_CODE, size,
                                 size, hintMap);
 //                BitMatrix bitMatrix = new UPCAWriter().encode(text, BarcodeFormat.UPC_A, width, height);
                 int CrunchifyWidth = byteMatrix.getWidth();
@@ -77,14 +77,14 @@ public class GenerateQRCode {
                 ImageIO.write(image, fileType, myFile);
                 
                 /* CODE 128 Barcode */
-                BitMatrix bitMatrix = new Code128Writer().encode("11111", BarcodeFormat.CODE_128, 150, 80, null);
-                MatrixToImageWriter.writeToStream(bitMatrix, "png", new FileOutputStream(new File("barcodes/code128.png")));
-                System.out.println("Code128 Barcode Generated.");
-                
-                BitMatrix bitMatrix1 = new UPCAWriter().encode("69277198116", BarcodeFormat.UPC_A, 150, 80, null);
-                MatrixToImageWriter.writeToStream(bitMatrix1, "png", new FileOutputStream(new File("barcodes/upca.png")));
-                System.out.println("UPC A Barcode Generated.");
-                
+//                BitMatrix bitMatrix = new Code128Writer().encode("11111", BarcodeFormat.CODE_128, 150, 80, null);
+//                MatrixToImageWriter.writeToStream(bitMatrix, "png", new FileOutputStream(new File("C:/Barcodes/code128.png")));
+//                System.out.println("Code128 Barcode Generated.");
+//                
+//                BitMatrix bitMatrix1 = new UPCAWriter().encode("69277198116", BarcodeFormat.UPC_A, 150, 80, null);
+//                MatrixToImageWriter.writeToStream(bitMatrix1, "png", new FileOutputStream(new File("C:/Barcodes/upca.png")));
+//                System.out.println("UPC A Barcode Generated.");
+//                
 //                InputStream barCodeInputStream = new FileInputStream("file.jpg");
 //                BufferedImage barCodeBufferedImage = ImageIO.read(barCodeInputStream);W
 //
@@ -92,9 +92,10 @@ public class GenerateQRCode {
 //                BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 //                Reader reader = new MultiFormatReader();
 //                Result result = reader.decode(bitmap);
+        return "Successful";
         } catch (WriterException e) {
                 e.printStackTrace();
+                return "Failed";
         }
-        System.out.println("\n\nYou have successfully created QR Code.");
     }
 }

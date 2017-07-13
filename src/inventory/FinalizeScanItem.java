@@ -5,13 +5,17 @@
  */
 package inventory;
 
+import java.awt.Color;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 import model.DB;
 import model.Stock;
 import model.User;
@@ -21,7 +25,38 @@ import model.User;
  * @author L R E
  */
 public class FinalizeScanItem extends javax.swing.JFrame {
+    static class MyTableModel extends DefaultTableModel {
+        List<Color> rowColours = Arrays.asList(
+            Color.RED,
+            Color.GREEN,
+            Color.CYAN
+        );
 
+        public void setRowColour(int row, Color c) {
+            rowColours.set(row, c);
+            fireTableRowsUpdated(row, row);
+        }
+
+        public Color getRowColour(int row) {
+            return rowColours.get(row);
+        }
+
+        @Override
+        public int getRowCount() {
+            return 3;
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 3;
+        }
+
+        @Override
+        public Object getValueAt(int row, int column) {
+            return String.format("%d %d", row, column);
+        }
+    }
+    
     private User sessionUser;
     DB db = new DB();
     private int itemID = 0;
@@ -197,6 +232,8 @@ public class FinalizeScanItem extends javax.swing.JFrame {
             int itemID = Integer.parseInt(lblItemID.getText());
             String itemName = lblItemName.getText();
             String note = txtNote.getText();
+            
+            System.out.println(action);
             String result = db.transactStock(this.sessionUser, itemID, itemName, action, quantity, note);
             
             if(result.equals("Successful")){

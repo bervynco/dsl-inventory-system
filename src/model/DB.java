@@ -176,7 +176,7 @@ public class DB {
         c.close();
         return user;
     }
-    
+
     public Integer getIdFromEmployeeName(String name) throws ClassNotFoundException, SQLException{
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("Select employee_id from users where name = ?");
@@ -218,7 +218,7 @@ public class DB {
         
         ArrayList<Logs> logs = new ArrayList<Logs>();
         PreparedStatement ps = c.prepareStatement("SELECT employee_id, name, page, action, log_date from logs where month(log_date) = ?"+
-                " and year(log_date) = ?");
+                " and year(log_date) = ? ORDER BY log_date DESC");
         ps.setInt(1, month);
         ps.setInt(2, year);
         
@@ -251,37 +251,36 @@ public class DB {
         c.close();
     }
 
-    public String addItem(String ac, String batchNo, String colorTemp, String cri, String dc, String image, String information, String ipRate, String itemNo, String kelvin,
-            String locationNo, String lumens, String power, String productName, String rackNo, String remarks,
+    public String addItem(String ac, String batchNo, String colorTemp, String cri, String dc, String ipRate, String itemNo, String kelvin,
+            String locationNo, String power, String productName, String rackNo, String remarks,
             String rowNo, String size, int quantity, int threshold, String wattage, String beamAngle, String productionDate) throws ClassNotFoundException, SQLException {
         Connection c = connect();
         int itemID = Integer.parseInt(itemNo);
-        PreparedStatement ps = c.prepareStatement("INSERT INTO items (item_id, product_name, information, ip_rate, kelvin, beam_angle, wattage,"+
-                " color_temp, batch_no, row_no, rack_no, location_no, quantity, threshold, production_date, lumens, cri, power, size, ac, dc, remark"+
-                ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        PreparedStatement ps = c.prepareStatement("INSERT INTO items (item_id, product_name, ip_rate, kelvin, beam_angle, wattage,"+
+                " color_temp, batch_no, row_no, rack_no, location_no, quantity, threshold, production_date, cri, power, size, ac, dc, remark"+
+                ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         
         ps.setInt(1, itemID);
         ps.setString(2, productName);
-        ps.setString(3, information);
-        ps.setString(4, ipRate);
-        ps.setString(5, kelvin);
-        ps.setString(6, beamAngle);
-        ps.setString(7, wattage);
-        ps.setString(8, colorTemp);
-        ps.setString(9, batchNo);
-        ps.setString(10, rowNo);
-        ps.setString(11, rackNo);
-        ps.setString(12, locationNo);
-        ps.setInt(13, quantity);
-        ps.setInt(14, threshold);
-        ps.setString(15, productionDate);
-        ps.setString(16, lumens);
-        ps.setString(17, cri);
-        ps.setString(18, power);
-        ps.setString(19, size);
-        ps.setString(20, ac);
-        ps.setString(21, dc);
-        ps.setString(22, remarks);
+//        ps.setString(3, information);
+        ps.setString(3, ipRate);
+        ps.setString(4, kelvin);
+        ps.setString(5, beamAngle);
+        ps.setString(6, wattage);
+        ps.setString(7, colorTemp);
+        ps.setString(8, batchNo);
+        ps.setString(9, rowNo);
+        ps.setString(10, rackNo);
+        ps.setString(11, locationNo);
+        ps.setInt(12, quantity);
+        ps.setInt(13, threshold);
+        ps.setString(14, productionDate);
+        ps.setString(15, cri);
+        ps.setString(16, power);
+        ps.setString(17, size);
+        ps.setString(18, ac);
+        ps.setString(19, dc);
+        ps.setString(20, remarks);
         
         int rows = ps.executeUpdate();
         if(rows > 0){
@@ -309,7 +308,24 @@ public class DB {
         else{
             return "Failed";
         }
-         
+    }
+    
+    public static String updateStockItem(int itemID, String itemName, int threshold) throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("UPDATE stocks SET itemName = ?, threshold = ? WHERE itemID = ?");
+        
+        ps.setString(1, itemName);
+        ps.setInt(2, threshold);
+        ps.setInt(3, itemID);
+        
+        int affectedRow = ps.executeUpdate();
+        c.close();
+        if(affectedRow > 0){
+            return "Successful";
+        }
+        else{
+            return "Error";
+        }
     }
     public List<Stock> getAllStocks() throws ClassNotFoundException, SQLException{
         Connection c = connect();
@@ -398,7 +414,6 @@ public class DB {
         
     }
     
-    
     public static List<Item> getItems() throws ClassNotFoundException, SQLException{
         List<Item> items = new ArrayList<Item>();
         Connection c = connect();
@@ -473,12 +488,12 @@ public class DB {
         return item;
     }
 
-    public static String updateItems(String ac, String batchNo, String colorTemp, String cri, String dc, String image, String information, String ipRate, 
-            String itemID, String kelvin, String locationNo, String lumens, String power, String productName, String rackNo, String remarks, String rowNo, String size, int quantity,
+    public static String updateItems(String ac, String batchNo, String colorTemp, String cri, String dc, String ipRate, 
+            String itemID, String kelvin, String locationNo, String power, String productName, String rackNo, String remarks, String rowNo, String size, int quantity,
             int threshold, String wattage, String beamAngle, String productionDate) throws ClassNotFoundException, SQLException {
         Connection c = connect();
-        PreparedStatement ps = c.prepareStatement("UPDATE items SET ac = ?, batch_no = ?,color_temp = ?, cri = ?, dc = ?, image = ?, information = ?, ip_rate = ?, "+
-                " kelvin = ?,location_no = ?, lumens = ?, power = ?, product_name = ?, rack_no = ?, remark = ?, row_no = ?, size = ?, quantity = ?, threshold = ?, wattage = ?, beam_angle = ?,"+
+        PreparedStatement ps = c.prepareStatement("UPDATE items SET ac = ?, batch_no = ?,color_temp = ?, cri = ?, dc = ?, ip_rate = ?, "+
+                " kelvin = ?,location_no = ?, power = ?, product_name = ?, rack_no = ?, remark = ?, row_no = ?, size = ?, quantity = ?, threshold = ?, wattage = ?, beam_angle = ?,"+
                 "production_date = ? WHERE item_id = ?");
         
         ps.setString(1, ac);
@@ -486,28 +501,27 @@ public class DB {
         ps.setString(3, colorTemp);
         ps.setString(4, cri);
         ps.setString(5, dc);
-        ps.setString(6, "");
-        ps.setString(7, information);
-        ps.setString(8, ipRate);
-        ps.setString(9, kelvin);
-        ps.setString(10, locationNo);
-        ps.setString(11, lumens);
-        ps.setString(12, power);
-        ps.setString(13, productName);
-        ps.setString(14, rackNo);
-        ps.setString(15, remarks);
-        ps.setString(16, rowNo);
-        ps.setString(17, size);
-        ps.setInt(18, quantity);
-        ps.setInt(19, threshold);
-        ps.setString(20, wattage);
-        ps.setString(21, beamAngle);
-        ps.setString(22, productionDate);
-        ps.setInt(23, Integer.parseInt(itemID));
+        // ps.setString(6, information);
+        ps.setString(6, ipRate);
+        ps.setString(7, kelvin);
+        ps.setString(8, locationNo);
+        ps.setString(9, power);
+        ps.setString(10, productName);
+        ps.setString(11, rackNo);
+        ps.setString(12, remarks);
+        ps.setString(13, rowNo);
+        ps.setString(14, size);
+        ps.setInt(15, quantity);
+        ps.setInt(16, threshold);
+        ps.setString(17, wattage);
+        ps.setString(18, beamAngle);
+        ps.setString(19, productionDate);
+        ps.setInt(20, Integer.parseInt(itemID));
         
         int affectedRow = ps.executeUpdate();
         c.close();
         if(affectedRow > 0){
+            String result = updateStockItem(Integer.parseInt(itemID), productName, threshold);
             return "Successful";
         }
         else{
@@ -578,7 +592,7 @@ public class DB {
         
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("Select employeeID, employeeName, itemID,"+
-                " item, quantity, type, transactionDate from transactions");
+                " item, quantity, type, transactionDate from transactions ORDER BY transactionDate DESC");
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             Transactions transaction = new Transactions();

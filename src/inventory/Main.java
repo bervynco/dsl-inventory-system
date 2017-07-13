@@ -5,6 +5,7 @@
  */
 package inventory;
 
+import inventory.FinalizeScanItem.MyTableModel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +44,6 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     private static String currentMenu = null;
-    
     private static User sessionUser = null;
     DB db = new DB();
     private String itemStatus = null;
@@ -59,6 +60,7 @@ public class Main extends javax.swing.JFrame {
         this.setButtonVisibility();
         
     }
+    
     public void setLabelTitle(){
         System.out.println(this.currentMenu);
         if(this.currentMenu.equals("Inventory"))
@@ -200,24 +202,24 @@ public class Main extends javax.swing.JFrame {
             items = db.getItems();
             model.addColumn("Item No");
             model.addColumn("Product Name");
-            model.addColumn("Information");
-            model.addColumn("IP Rate");
-            model.addColumn("Kelvin");
-            model.addColumn("Beam Angle");
-            model.addColumn("Wattage");
+//            model.addColumn("Information");
+//            model.addColumn("IP Rate");
+//            model.addColumn("Kelvin");
+//            model.addColumn("Beam Angle");
+//            model.addColumn("Wattage");
             model.addColumn("Color Temp");
-            model.addColumn("Batch No");
-            model.addColumn("Row No");
-            model.addColumn("Rack No");
-            model.addColumn("Location No");
-            model.addColumn("Threshold");
-            model.addColumn("Production Date");
-            model.addColumn("Lumens");
-            model.addColumn("Cri");
+//            model.addColumn("Batch No");
+//            model.addColumn("Row No");
+//            model.addColumn("Rack No");
+//            model.addColumn("Location No");
+//            model.addColumn("Threshold");
+//            model.addColumn("Production Date");
+//            model.addColumn("Lumens");
+//            model.addColumn("Cri");
             model.addColumn("Power");
             model.addColumn("Size");
-            model.addColumn("AC");
-            model.addColumn("DC");
+//            model.addColumn("AC");
+//            model.addColumn("DC");
 
             for(int i = 0; i < items.size(); i++){
                 //System.out.println(items.get(i).getItemNo());
@@ -225,24 +227,24 @@ public class Main extends javax.swing.JFrame {
                 Object [] rowData = {
                     items.get(i).getItemNo(),
                     items.get(i).getProductName(),
-                    items.get(i).getInformation(),
-                    items.get(i).getIpRate(),
-                    items.get(i).getKelvin(),
-                    items.get(i).getBeamAngle(),
-                    items.get(i).getWattage(),
+//                    items.get(i).getInformation(),
+//                    items.get(i).getIpRate(),
+//                    items.get(i).getKelvin(),
+//                    items.get(i).getBeamAngle(),
+//                    items.get(i).getWattage(),
                     items.get(i).getColorTemp(),
-                    items.get(i).getBatchNo(),
-                    items.get(i).getRowNo(),
-                    items.get(i).getRackNo(),
-                    items.get(i).getLocationNo(),
-                    items.get(i).getThreshold(),
-                    items.get(i).getProductionDate(),
-                    items.get(i).getLumens(),
-                    items.get(i).getCri(),
+//                    items.get(i).getBatchNo(),
+//                    items.get(i).getRowNo(),
+//                    items.get(i).getRackNo(),
+//                    items.get(i).getLocationNo(),
+//                    items.get(i).getThreshold(),
+//                    items.get(i).getProductionDate(),
+//                    items.get(i).getLumens(),
+//                    items.get(i).getCri(),
                     items.get(i).getPower(),
-                    items.get(i).getSize(),
-                    items.get(i).getAc(),
-                    items.get(i).getDc()
+                    items.get(i).getSize()
+//                    items.get(i).getAc(),
+//                    items.get(i).getDc()
                 };
                 model.addRow(rowData);
             }
@@ -258,6 +260,16 @@ public class Main extends javax.swing.JFrame {
             model.addColumn("Status");
             model.addColumn("Replenished Date");
             
+            tableList.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+            {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+                {
+                    final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                    c.setBackground(row % 2 == 0 ? Color.YELLOW : Color.WHITE);
+                    return c;
+                }
+            });
             for(int i = 0; i < items.size(); i++){
                 this.itemStatus = "Good";
                 if(items.get(i).getStatus() != 0){
