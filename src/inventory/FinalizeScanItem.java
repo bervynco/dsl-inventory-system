@@ -61,11 +61,13 @@ public class FinalizeScanItem extends javax.swing.JFrame {
     private User sessionUser;
     DB db = new DB();
     private String itemID = null;
+    private String barcode = null;
     private final JPanel panel = new JPanel();
-    public FinalizeScanItem(User user, String itemID, String action) throws ClassNotFoundException, SQLException {
+    public FinalizeScanItem(User user, String itemID, String action, String barcode) throws ClassNotFoundException, SQLException {
         initComponents();
         this.sessionUser = user;
         this.itemID = itemID;
+        this.barcode = barcode;
         this.setFields(itemID, action);
     }
     public void setFields(String itemID, String action) throws ClassNotFoundException, SQLException{
@@ -281,7 +283,10 @@ public class FinalizeScanItem extends javax.swing.JFrame {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
-            ScanItem item = new ScanItem(this.sessionUser, this.itemID);
+            System.out.println("LBL ITEM: " + lblItemID.getText());
+            
+            this.setVisible(false);
+            ScanItem item = new ScanItem(this.sessionUser, barcode);
             item.setTitle("DSL Inventory System | Main");
             item.pack();
             item.setLocationRelativeTo(null);

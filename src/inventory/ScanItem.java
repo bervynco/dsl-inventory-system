@@ -616,7 +616,7 @@ public class ScanItem extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.setVisible(false);
-            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Transact");
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Transact", itemID);
             item.setTitle("DSL Inventory System | Checkout");
             item.pack();
             item.setLocationRelativeTo(null);
@@ -632,7 +632,7 @@ public class ScanItem extends javax.swing.JFrame {
     private void btnReplenishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplenishActionPerformed
         try {
             this.setVisible(false);
-            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Replenish");
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Replenish", itemID);
             item.setTitle("DSL Inventory System | Checkout");
             item.pack();
             item.setLocationRelativeTo(null);
@@ -647,7 +647,7 @@ public class ScanItem extends javax.swing.JFrame {
     private void btnDepleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepleteActionPerformed
         try {
             this.setVisible(false);
-            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Deplete");
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Deplete", itemID);
             item.setTitle("DSL Inventory System | Checkout");
             item.pack();
             item.setLocationRelativeTo(null);

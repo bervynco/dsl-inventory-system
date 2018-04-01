@@ -413,8 +413,15 @@ public class DB {
         int overallQuantity = rs.getInt(1);
         int updateQuantity = 0;
         
+        
         if(action.equals("Replenish")){
+            java.util.Date date = new java.util.Date();
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime()); 
             updateQuantity = overallQuantity + quantity;
+            PreparedStatement ps1 = c.prepareStatement("UPDATE stocks SET replenishDate = ? WHERE itemID = ? ");
+            ps1.setDate(1, sqlDate);
+            ps1.setString(2, itemID);
+            ps1.executeUpdate();
         }
         else if(action.equals("Deplete")){
             updateQuantity = 0;
@@ -430,6 +437,7 @@ public class DB {
         ps.setInt(1, updateQuantity);
         ps.setString(2, itemID);
         ps.executeUpdate();
+        
         //id, employeeID, employeeName, itemID, item, quantity, type, note, transactionDate
         PreparedStatement psTransact = c.prepareStatement("INSERT INTO transactions(employeeID, employeeName, itemID, item, quantity, type, note) VALUES(?,?,?,?,?,?,?)");
         psTransact.setInt(1, user.getEmployeeID());
