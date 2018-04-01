@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  */
 public class Stock {
     private int id;
-    private int itemID;
+    private String itemID;
     private String itemName;
     private int quantity;
     private int threshold;
@@ -28,11 +28,11 @@ public class Stock {
         this.id = id;
     }
 
-    public int getItemID() {
+    public String getItemID() {
         return itemID;
     }
 
-    public void setItemID(int itemID) {
+    public void setItemID(String itemID) {
         this.itemID = itemID;
     }
 

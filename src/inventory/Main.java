@@ -258,18 +258,7 @@ public class Main extends javax.swing.JFrame {
             model.addColumn("Quantity");
             model.addColumn("Threshold");
             model.addColumn("Status");
-            model.addColumn("Replenished Date");
             
-            tableList.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
-            {
-                @Override
-                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-                {
-                    final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                    c.setBackground(row % 2 == 0 ? Color.YELLOW : Color.WHITE);
-                    return c;
-                }
-            });
             for(int i = 0; i < items.size(); i++){
                 this.itemStatus = "Good";
                 if(items.get(i).getStatus() != 0){
@@ -281,8 +270,7 @@ public class Main extends javax.swing.JFrame {
                     items.get(i).getItemName(),
                     items.get(i).getQuantity(),
                     items.get(i).getThreshold(),
-                    this.itemStatus,
-                    items.get(i).getReplenishDate()
+                    this.itemStatus
                 };
                 model.addRow(rowData);
             }
@@ -623,10 +611,10 @@ public class Main extends javax.swing.JFrame {
             }
        }
        else if(this.currentMenu.equals("Inventory")){
-           this.setVisible(false);
             try {
-                int itemID = (Integer) tableList.getValueAt(row, 0);
-                EditItem edit = new EditItem(this.sessionUser, itemID);//Integer.parseInt(itemID)
+                this.setVisible(false);
+                String itemID = (String) tableList.getValueAt(row, 0);
+                EditItem edit = new EditItem(this.sessionUser, itemID, true);
                 edit.setTitle("DSL Inventory System | Edit User");
                 edit.pack();
                 edit.setLocationRelativeTo(null);
@@ -665,20 +653,32 @@ public class Main extends javax.swing.JFrame {
             }
         }
         else if(this.currentMenu.equals("Items")){
-            this.setVisible(false);
-            AddNewItem newItem = new AddNewItem(this.sessionUser);
-            newItem.setTitle("DSL Inventory System | Add New Item");
-            newItem.pack();
-            newItem.setLocationRelativeTo(null);
-            newItem.setVisible(true);
+            try {
+                this.setVisible(false);
+                AddNewItem newItem = new AddNewItem(this.sessionUser);
+                newItem.setTitle("DSL Inventory System | Add New Item");
+                newItem.pack();
+                newItem.setLocationRelativeTo(null);
+                newItem.setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else if(this.currentMenu.equals("Inventory")){
-            this.setVisible(false);
-            AddNewItem newItem = new AddNewItem(this.sessionUser);
-            newItem.setTitle("DSL Inventory System | Add New Item");
-            newItem.pack();
-            newItem.setLocationRelativeTo(null);
-            newItem.setVisible(true);
+            try {
+                this.setVisible(false);
+                AddNewItem newItem = new AddNewItem(this.sessionUser);
+                newItem.setTitle("DSL Inventory System | Add New Item");
+                newItem.pack();
+                newItem.setLocationRelativeTo(null);
+                newItem.setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else;
     }//GEN-LAST:event_btnAddActionPerformed

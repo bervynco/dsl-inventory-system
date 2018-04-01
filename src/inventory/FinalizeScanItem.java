@@ -6,6 +6,7 @@
 package inventory;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -59,18 +60,19 @@ public class FinalizeScanItem extends javax.swing.JFrame {
     
     private User sessionUser;
     DB db = new DB();
-    private int itemID = 0;
+    private String itemID = null;
     private final JPanel panel = new JPanel();
-    public FinalizeScanItem(User user, int itemID, String action) throws ClassNotFoundException, SQLException {
+    public FinalizeScanItem(User user, String itemID, String action) throws ClassNotFoundException, SQLException {
         initComponents();
         this.sessionUser = user;
         this.itemID = itemID;
         this.setFields(itemID, action);
     }
-    public void setFields(int itemID, String action) throws ClassNotFoundException, SQLException{
+    public void setFields(String itemID, String action) throws ClassNotFoundException, SQLException{
         Stock stock = new Stock();
+        System.out.println(itemID);
         stock = db.getStockItem(itemID);
-        lblItemID.setText(Integer.toString(stock.getItemID()));
+        lblItemID.setText(stock.getItemID());
         lblItemName.setText(stock.getItemName());
         comboType.setSelectedItem(action);
     }
@@ -229,11 +231,14 @@ public class FinalizeScanItem extends javax.swing.JFrame {
         try {
             quantity = Integer.parseInt(txtQuantity.getText());
             String action = (String) comboType.getSelectedItem();
-            int itemID = Integer.parseInt(lblItemID.getText());
+            String itemID = lblItemID.getText();
             String itemName = lblItemName.getText();
             String note = txtNote.getText();
             
             System.out.println(action);
+            System.out.println(itemID);
+            System.out.println(itemName);
+            System.out.println(note);
             String result = db.transactStock(this.sessionUser, itemID, itemName, action, quantity, note);
             
             if(result.equals("Successful")){
@@ -269,6 +274,8 @@ public class FinalizeScanItem extends javax.swing.JFrame {
             Logger.getLogger(FinalizeScanItem.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
             Logger.getLogger(FinalizeScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FinalizeScanItem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
 
@@ -284,6 +291,8 @@ public class FinalizeScanItem extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(FinalizeScanItem.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
+            Logger.getLogger(FinalizeScanItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(FinalizeScanItem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnCancelActionPerformed

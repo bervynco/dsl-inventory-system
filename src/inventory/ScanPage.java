@@ -5,6 +5,7 @@
  */
 package inventory;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Timer;
@@ -15,6 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import model.DB;
 import model.User;
+import com.google.gson.*;
 
 /**
  *
@@ -139,7 +141,7 @@ public class ScanPage extends javax.swing.JFrame {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         try {
             // TODO add your handling code here:
-            int id = Integer.parseInt(txtScan.getText())  ;
+            String id = txtScan.getText();
             this.setVisible(false);
             this.main.setVisible(false);
             ScanItem item = new ScanItem(this.sessionUser, id);
@@ -152,6 +154,8 @@ public class ScanPage extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(ScanPage.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
+            Logger.getLogger(ScanPage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(ScanPage.class.getName()).log(Level.SEVERE, null, ex);
         }
         

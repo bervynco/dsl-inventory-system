@@ -218,11 +218,12 @@ public class AddUser extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.setVisible(false);
-            UserSection option = new UserSection(this.sessionUser);
-            option.setTitle("DSL Inventory System | Employees Sections");
-            option.pack();
-            option.setLocationRelativeTo(null);
-            option.setVisible(true);
+            Main main = new Main(this.sessionUser, "Users");
+            main.setTitle("DSL Inventory System | Main");
+            main.pack();
+            main.setLocationRelativeTo(null);
+            main.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            main.setVisible(true);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(AddUser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

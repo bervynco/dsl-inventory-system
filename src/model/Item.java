@@ -10,7 +10,7 @@ package model;
  * @author L R E
  */
 public class Item {
-    private int itemID;
+    private String itemID;
     private String ac;
     private String batchNo;
     private String beamAngle;
@@ -36,11 +36,11 @@ public class Item {
     private String productionDate;
     private String status;
 
-    public int getItemID() {
+    public String getItemID() {
         return itemID;
     }
 
-    public void setItemID(int itemID) {
+    public void setItemID(String itemID) {
         this.itemID = itemID;
     }
 

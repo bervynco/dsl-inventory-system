@@ -1,6 +1,6 @@
 package model;
 
-
+import java.util.Random.*;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,19 +25,20 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class DB {
-//    private static String user = "root";
-//    private static String pass = "DslDatabase";
-//    private static String host = "localhost";
-//    private static String port = "3306";
-//    private static String url = "jdbc:mysql://" + host + ":" + port + "/dsl_inventory_system";
-    
     private static String user = "root";
     private static String pass = "password";
     private static String host = "localhost";
     private static String port = "3306";
     private static String url = "jdbc:mysql://" + host + ":" + port + "/dsl_inventory_system";
+//    
+//    private static String user = "dsl";
+//    private static String pass = "DslDatabase";
+//    private static String host = "localhost";
+//    private static String port = "3306";
+//    private static String url = "jdbc:mysql://" + host + ":" + port + "/dsl_inventory_system";
     public static Connection connect() throws ClassNotFoundException, SQLException {
 
        Connection conn = null;
@@ -77,6 +78,15 @@ public class DB {
         return user;
     }
     
+    public static boolean determineDuplicateBarcode(Long barcodeNum) throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("Select * from items where barcode = ? ");
+        ps.setLong(1, barcodeNum);
+        ResultSet rs = ps.executeQuery();
+        
+        
+        return rs.first();
+    }
     public static boolean determineDuplicateEmployeeID(int employeeID) throws ClassNotFoundException, SQLException{
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("Select * from users where employee_id = ? ");
@@ -87,6 +97,27 @@ public class DB {
         return rs.first();
     }
     
+    public static String generateItemNo() throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        String itemNo = null;
+        String proposedItemNo = null;
+        do {
+            Random rand = new Random();
+            int randNumber = rand.nextInt(10000) + 1;
+            proposedItemNo = Integer.toString(randNumber);
+
+            PreparedStatement ps = c.prepareStatement("Select item_id from items where item_id = ? ");
+            ps.setString(1, proposedItemNo);
+
+            ResultSet rs = ps.executeQuery();
+            if(!rs.first()){
+                itemNo = proposedItemNo;
+            }
+        }while(itemNo == null);
+        
+        return itemNo;
+        
+    }
     public static String registerUser(int employeeID, String name, String role, String password) throws ClassNotFoundException, ClassNotFoundException, SQLException{
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("INSERT INTO users (employee_id, name, role, password) VALUES (?,?,?,?)");
@@ -253,14 +284,19 @@ public class DB {
 
     public String addItem(String ac, String batchNo, String colorTemp, String cri, String dc, String ipRate, String itemNo, String kelvin,
             String locationNo, String power, String productName, String rackNo, String remarks,
-            String rowNo, String size, int quantity, int threshold, String wattage, String beamAngle, String productionDate) throws ClassNotFoundException, SQLException {
+            String rowNo, String size, int quantity, int threshold, String wattage, String beamAngle, String productionDate, Long barcodeIdentifier) throws ClassNotFoundException, SQLException {
+        if(productionDate == null){
+            Date date = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+        }
         Connection c = connect();
-        int itemID = Integer.parseInt(itemNo);
+        // int itemID = Integer.parseInt(itemNo);
         PreparedStatement ps = c.prepareStatement("INSERT INTO items (item_id, product_name, ip_rate, kelvin, beam_angle, wattage,"+
-                " color_temp, batch_no, row_no, rack_no, location_no, quantity, threshold, production_date, cri, power, size, ac, dc, remark"+
-                ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                " color_temp, batch_no, row_no, rack_no, location_no, quantity, threshold, production_date, cri, power, size, ac, dc, remark, barcode"+
+                ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         
-        ps.setInt(1, itemID);
+        ps.setString(1, itemNo);
         ps.setString(2, productName);
 //        ps.setString(3, information);
         ps.setString(3, ipRate);
@@ -281,10 +317,11 @@ public class DB {
         ps.setString(18, ac);
         ps.setString(19, dc);
         ps.setString(20, remarks);
+        ps.setLong(21, barcodeIdentifier);
         
         int rows = ps.executeUpdate();
         if(rows > 0){
-           String status = this.addStockItem(itemID, productName, quantity, threshold);
+           String status = this.addStockItem(itemNo, productName, quantity, threshold);
            return status;
         }
         else{
@@ -292,10 +329,10 @@ public class DB {
         }
     }
     
-    public static String addStockItem(int itemID, String itemName, int quantity, int threshold) throws ClassNotFoundException, SQLException{
+    public static String addStockItem(String itemID, String itemName, int quantity, int threshold) throws ClassNotFoundException, SQLException{
          Connection c = connect();
          PreparedStatement ps = c.prepareStatement("INSERT INTO stocks(itemID, itemName, quantity, threshold) VALUES (?,?,?,?)");
-         ps.setInt(1, itemID);
+         ps.setString(1, itemID);
          ps.setString(2, itemName);
          ps.setInt(3, quantity);
          ps.setInt(4, threshold);
@@ -310,13 +347,13 @@ public class DB {
         }
     }
     
-    public static String updateStockItem(int itemID, String itemName, int threshold) throws ClassNotFoundException, SQLException{
+    public static String updateStockItem(String itemID, String itemName, int threshold) throws ClassNotFoundException, SQLException{
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("UPDATE stocks SET itemName = ?, threshold = ? WHERE itemID = ?");
         
         ps.setString(1, itemName);
         ps.setInt(2, threshold);
-        ps.setInt(3, itemID);
+        ps.setString(3, itemID);
         
         int affectedRow = ps.executeUpdate();
         c.close();
@@ -339,7 +376,7 @@ public class DB {
         while(rs.next()){
             Stock stock = new Stock();
             stock.setId(rs.getInt(1));
-            stock.setItemID(rs.getInt(2));
+            stock.setItemID(rs.getString(2));
             stock.setItemName(rs.getString(3));
             stock.setQuantity(rs.getInt(4));
             stock.setThreshold(rs.getInt(5));
@@ -349,15 +386,15 @@ public class DB {
         }
         return stocks;
     }
-    public Stock getStockItem(int itemID) throws ClassNotFoundException, SQLException{
+    public Stock getStockItem(String itemID) throws ClassNotFoundException, SQLException{
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("Select * from stocks where itemID = ?");
-        ps.setInt(1, itemID);
+        ps.setString(1, itemID);
         ResultSet rs = ps.executeQuery();
         Stock stock = new Stock();
         while(rs.next()){
             stock.setId(rs.getInt(1));
-            stock.setItemID(rs.getInt(2));
+            stock.setItemID(rs.getString(2));
             stock.setItemName(rs.getString(3));
             stock.setQuantity(rs.getInt(4));
             stock.setThreshold(rs.getInt(5));
@@ -367,10 +404,10 @@ public class DB {
         return stock;
     }
     
-    public String transactStock(User user, int itemID, String itemName, String action, int quantity, String note) throws ClassNotFoundException, SQLException {
+    public String transactStock(User user, String itemID, String itemName, String action, int quantity, String note) throws ClassNotFoundException, SQLException {
         Connection c = connect();
         PreparedStatement psQuantity = c.prepareStatement("Select quantity from stocks where itemID = ?");
-        psQuantity.setInt(1, itemID);
+        psQuantity.setString(1, itemID);
         ResultSet rs = psQuantity.executeQuery();
         rs.first();
         int overallQuantity = rs.getInt(1);
@@ -391,13 +428,13 @@ public class DB {
         else;
         PreparedStatement ps = c.prepareStatement("UPDATE stocks SET quantity = ? WHERE itemID = ? ");
         ps.setInt(1, updateQuantity);
-        ps.setInt(2, itemID);
+        ps.setString(2, itemID);
         ps.executeUpdate();
         //id, employeeID, employeeName, itemID, item, quantity, type, note, transactionDate
         PreparedStatement psTransact = c.prepareStatement("INSERT INTO transactions(employeeID, employeeName, itemID, item, quantity, type, note) VALUES(?,?,?,?,?,?,?)");
         psTransact.setInt(1, user.getEmployeeID());
         psTransact.setString(2, user.getFullName());
-        psTransact.setInt(3, itemID);
+        psTransact.setString(3, itemID);
         psTransact.setString(4, itemName);
         psTransact.setInt(5, quantity);
         psTransact.setString(6, action);
@@ -422,8 +459,8 @@ public class DB {
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             Item item = new Item();
-            System.out.println(rs.getInt(2));
-            item.setItemNo(Integer.toString(rs.getInt(2)));
+//            System.out.println(rs.getInt(2));
+            item.setItemNo(rs.getString(2));
             item.setProductName(rs.getString(3));
             item.setInformation(rs.getString(4));
             item.setIpRate(rs.getString(5));
@@ -453,14 +490,48 @@ public class DB {
         return items;
     }
     
-    public static Item getItemDetails(int itemID) throws ClassNotFoundException, SQLException{
+    public static Item getItemFromCode(String itemID) throws ClassNotFoundException, SQLException{
         Connection c = connect();
-        PreparedStatement ps = c.prepareStatement("Select * from items where item_id = ?");
-        ps.setInt(1, itemID);
+        PreparedStatement ps = c.prepareStatement("Select * from items where barcode = ?");
+        ps.setString(1, itemID);
         ResultSet rs = ps.executeQuery();
         Item item = new Item();
         while(rs.next()){
-            item.setItemID(rs.getInt(2));
+            item.setItemID(rs.getString(2));
+            item.setProductName(rs.getString(3));
+            item.setInformation(rs.getString(4));
+            item.setIpRate(rs.getString(5));
+            item.setKelvin(rs.getString(6));
+            item.setBeamAngle(rs.getString(7));
+            item.setWattage(rs.getString(8));
+            item.setColorTemp(rs.getString(9));
+            item.setBatchNo(rs.getString(10));
+            item.setRowNo(rs.getString(11));
+            item.setRackNo(rs.getString(12));
+            item.setLocationNo(rs.getString(13));
+            item.setQuantity(rs.getInt(14));
+            item.setThreshold(rs.getInt(15));
+            item.setProductionDate(rs.getString(16));
+            item.setLumens(rs.getString(17));
+            item.setCri(rs.getString(18));
+            item.setPower(rs.getString(19));
+            item.setSize(rs.getString(20));
+            item.setAc(rs.getString(21));
+            item.setDc(rs.getString(22));
+            item.setRemarks(rs.getString(23));
+            item.setStatus(rs.getString(24));
+        }
+        c.close();
+        return item;
+    }
+    public static Item getItemDetails(String itemID) throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("Select * from items where item_id = ?");
+        ps.setString(1, itemID);
+        ResultSet rs = ps.executeQuery();
+        Item item = new Item();
+        while(rs.next()){
+            item.setItemID(rs.getString(2));
             item.setProductName(rs.getString(3));
             item.setInformation(rs.getString(4));
             item.setIpRate(rs.getString(5));
@@ -521,7 +592,7 @@ public class DB {
         int affectedRow = ps.executeUpdate();
         c.close();
         if(affectedRow > 0){
-            String result = updateStockItem(Integer.parseInt(itemID), productName, threshold);
+            String result = updateStockItem(itemID, productName, threshold);
             return "Successful";
         }
         else{

@@ -35,7 +35,7 @@ public class EditItem extends javax.swing.JFrame {
     private static String pageFrom = null;
     private final JPanel panel = new JPanel();
     DB db = new DB();
-    public void setEditableFields(int itemID) throws ClassNotFoundException, SQLException, IOException{
+    public void setEditableFields(String itemID) throws ClassNotFoundException, SQLException, IOException{
         System.out.println(itemID);
         Item item = new Item();
         item =  db.getItemDetails(itemID);
@@ -49,7 +49,7 @@ public class EditItem extends javax.swing.JFrame {
         //txtImage.setText(item.getImage());
         // txtInformation.setText(item.getInformation());
         txtIpRate.setText(item.getIpRate());
-        txtItemNo.setText(Integer.toString(item.getItemID()));
+        txtItemNo.setText(item.getItemID());
         txtKelvin.setText(item.getKelvin());
         txtLocationNo.setText(item.getLocationNo());
         //txtLumens.setText(item.getLumens());
@@ -85,7 +85,7 @@ public class EditItem extends javax.swing.JFrame {
             btnDelete.setVisible(true);
         }
     }
-    public EditItem(User user, int itemID) throws ClassNotFoundException, SQLException, IOException{
+    public EditItem(User user, String itemID, boolean trash) throws ClassNotFoundException, SQLException, IOException{
         initComponents();
         this.sessionUser = user;
         this.setEditableFields(itemID);
