@@ -490,36 +490,52 @@ public class DB {
         return items;
     }
     
+    public static String getItemIDFromBarcode(String itemID) throws SQLException, ClassNotFoundException{
+        String id = null;
+        Connection c = connect();
+        PreparedStatement ps = c.prepareStatement("SELECT item_id from items where barcode = ?");
+        ps.setString(1, itemID);
+        
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+            id = rs.getString(1);
+        }
+        return id;
+    }
     public static Item getItemFromCode(String itemID) throws ClassNotFoundException, SQLException{
         Connection c = connect();
-        PreparedStatement ps = c.prepareStatement("Select * from items where barcode = ?");
+        //SELECT a.quantity as 'stockQuantity', a.threshold as 'stockThreshold', b.* FROM dsl_inventory_system.stocks a, dsl_inventory_system.items b where a.itemID = b.item_id;
+        // PreparedStatement ps = c.prepareStatement("Select * from items where barcode = ?");
+        PreparedStatement ps = c.prepareStatement("SELECT a.quantity as 'stockQuantity', a.threshold as 'stockThreshold', "
+                + "b.* FROM dsl_inventory_system.stocks a, dsl_inventory_system.items b where a.itemID = b.item_id and b.item_id = ?");
         ps.setString(1, itemID);
         ResultSet rs = ps.executeQuery();
         Item item = new Item();
         while(rs.next()){
-            item.setItemID(rs.getString(2));
-            item.setProductName(rs.getString(3));
-            item.setInformation(rs.getString(4));
-            item.setIpRate(rs.getString(5));
-            item.setKelvin(rs.getString(6));
-            item.setBeamAngle(rs.getString(7));
-            item.setWattage(rs.getString(8));
-            item.setColorTemp(rs.getString(9));
-            item.setBatchNo(rs.getString(10));
-            item.setRowNo(rs.getString(11));
-            item.setRackNo(rs.getString(12));
-            item.setLocationNo(rs.getString(13));
-            item.setQuantity(rs.getInt(14));
-            item.setThreshold(rs.getInt(15));
-            item.setProductionDate(rs.getString(16));
-            item.setLumens(rs.getString(17));
-            item.setCri(rs.getString(18));
-            item.setPower(rs.getString(19));
-            item.setSize(rs.getString(20));
-            item.setAc(rs.getString(21));
-            item.setDc(rs.getString(22));
-            item.setRemarks(rs.getString(23));
-            item.setStatus(rs.getString(24));
+            item.setItemID(rs.getString(4));
+            item.setProductName(rs.getString(5));
+            item.setInformation(rs.getString(6));
+            item.setIpRate(rs.getString(7));
+            item.setKelvin(rs.getString(8));
+            item.setBeamAngle(rs.getString(9));
+            item.setWattage(rs.getString(10));
+            item.setColorTemp(rs.getString(11));
+            item.setBatchNo(rs.getString(12));
+            item.setRowNo(rs.getString(13));
+            item.setRackNo(rs.getString(14));
+            item.setLocationNo(rs.getString(15));
+            item.setQuantity(rs.getInt(1));
+            item.setThreshold(rs.getInt(2));
+            System.out.println("PRODUCTION DATE: " + rs.getDate(18));
+            item.setProductionDate(rs.getDate(18).toString());
+            item.setLumens(rs.getString(19));
+            item.setCri(rs.getString(20));
+            item.setPower(rs.getString(21));
+            item.setSize(rs.getString(22));
+            item.setAc(rs.getString(23));
+            item.setDc(rs.getString(24));
+            item.setRemarks(rs.getString(25));
+            item.setStatus(rs.getString(26));
         }
         c.close();
         return item;

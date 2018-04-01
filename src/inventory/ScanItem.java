@@ -48,7 +48,8 @@ public class ScanItem extends javax.swing.JFrame {
 //        Gson gson = new Gson();
 //        QRModel qr = gson.fromJson(itemID, QRModel.class);
         Item item = new Item();
-        item =  db.getItemFromCode(itemID);
+        String code = db.getItemIDFromBarcode(itemID);
+        item =  db.getItemFromCode(code);
         lblQuantity.setText(Integer.toString(item.getQuantity()));
         lblThreshold.setText(Integer.toString(item.getThreshold()));
         lblItemID.setText(item.getItemID());
@@ -76,7 +77,8 @@ public class ScanItem extends javax.swing.JFrame {
         txtQuantity.setText(Integer.toString(item.getQuantity()));
         txtThreshold.setText(Integer.toString(item.getThreshold()));
         txtWattage.setText(item.getWattage());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        System.out.println(item.getProductionDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd H:m:s");
         String[] date = item.getProductionDate().split(" ");
         LocalDate localDate = LocalDate.parse(date[0]);
         dpProductionDate.setDate(localDate);
@@ -645,7 +647,7 @@ public class ScanItem extends javax.swing.JFrame {
     private void btnDepleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepleteActionPerformed
         try {
             this.setVisible(false);
-            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Deplete ");
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Deplete");
             item.setTitle("DSL Inventory System | Checkout");
             item.pack();
             item.setLocationRelativeTo(null);
