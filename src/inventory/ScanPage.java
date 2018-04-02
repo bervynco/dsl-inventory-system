@@ -27,12 +27,13 @@ public class ScanPage extends javax.swing.JFrame {
     DB db = new DB();
     private static User sessionUser = null;
     private static Main main = null;
-    public ScanPage(User user) throws ClassNotFoundException, SQLException, ParseException {
+    private static String currentMenu = null;
+    public ScanPage(User user, String currentMenu) throws ClassNotFoundException, SQLException, ParseException {
         initComponents();
         this.sessionUser = user;
         db.setLogStatus(this.sessionUser.getEmployeeID(), this.sessionUser.getFullName(), "Scan Item Page", "Visit");
     }
-    public ScanPage(User user, Main main) throws ClassNotFoundException, SQLException, ParseException {
+    public ScanPage(User user, Main main, String currentMenu) throws ClassNotFoundException, SQLException, ParseException {
         initComponents();
         this.sessionUser = user;
         this.main = main;
@@ -144,7 +145,8 @@ public class ScanPage extends javax.swing.JFrame {
             String id = txtScan.getText();
             this.setVisible(false);
             this.main.setVisible(false);
-            ScanItem item = new ScanItem(this.sessionUser, id);
+            ListOfStockItems item = new ListOfStockItems(this.sessionUser, this.currentMenu, id);
+//            ScanItem item = new ScanItem(this.sessionUser, id);
             item.setTitle("DSL Inventory System | Main");
             item.pack();
             item.setLocationRelativeTo(null);
@@ -154,8 +156,6 @@ public class ScanPage extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(ScanPage.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
-            Logger.getLogger(ScanPage.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
             Logger.getLogger(ScanPage.class.getName()).log(Level.SEVERE, null, ex);
         }
         

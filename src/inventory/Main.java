@@ -574,7 +574,7 @@ public class Main extends javax.swing.JFrame {
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
         try {
-            ScanPage scan = new ScanPage(this.sessionUser, this);
+            ScanPage scan = new ScanPage(this.sessionUser, this, this.currentMenu);
             scan.setTitle("DSL Inventory System | Scan");
             scan.pack();
             scan.setLocationRelativeTo(null);

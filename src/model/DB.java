@@ -386,10 +386,32 @@ public class DB {
         }
         return stocks;
     }
-    public Stock getStockItem(String itemID) throws ClassNotFoundException, SQLException{
+    public List<Stock> getAllStocksFromBarcode(String barcode) throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        
+        ArrayList<Stock> stocks = new ArrayList<Stock>();
+        PreparedStatement ps = c.prepareStatement("Select a.id, a.itemID, a.itemName, a.quantity, a.threshold,"+
+                "a.status from stocks a, items b where b.barcode = ? and b.item_id = a.itemID");
+        ps.setLong(1, Long.parseLong(barcode));
+        ResultSet rs = ps.executeQuery();
+        
+        while(rs.next()){
+            Stock stock = new Stock();
+            stock.setId(rs.getInt(1));
+            stock.setItemID(rs.getString(2));
+            stock.setItemName(rs.getString(3));
+            stock.setQuantity(rs.getInt(4));
+            stock.setThreshold(rs.getInt(5));
+            stock.setStatus(rs.getInt(6));
+            
+            stocks.add(stock);
+        }
+        return stocks;
+    }
+    public Stock getStockItem(int itemID) throws ClassNotFoundException, SQLException{
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("Select * from stocks where itemID = ?");
-        ps.setString(1, itemID);
+        ps.setInt(1, itemID);
         ResultSet rs = ps.executeQuery();
         Stock stock = new Stock();
         while(rs.next()){
@@ -517,13 +539,13 @@ public class DB {
         }
         return id;
     }
-    public static Item getItemFromCode(String itemID) throws ClassNotFoundException, SQLException{
+    public static Item getItemFromCode(int itemID) throws ClassNotFoundException, SQLException{
         Connection c = connect();
         //SELECT a.quantity as 'stockQuantity', a.threshold as 'stockThreshold', b.* FROM dsl_inventory_system.stocks a, dsl_inventory_system.items b where a.itemID = b.item_id;
         // PreparedStatement ps = c.prepareStatement("Select * from items where barcode = ?");
         PreparedStatement ps = c.prepareStatement("SELECT a.quantity as 'stockQuantity', a.threshold as 'stockThreshold', "
-                + "b.* FROM dsl_inventory_system.stocks a, dsl_inventory_system.items b where a.itemID = b.item_id and b.item_id = ?");
-        ps.setString(1, itemID);
+                + "b.* FROM dsl_inventory_system.stocks a, dsl_inventory_system.items b where a.itemID = b.item_id and a.id = ?");
+        ps.setString(1, Integer.toString(itemID));
         ResultSet rs = ps.executeQuery();
         Item item = new Item();
         while(rs.next()){

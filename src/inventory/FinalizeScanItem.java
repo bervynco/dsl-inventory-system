@@ -60,17 +60,17 @@ public class FinalizeScanItem extends javax.swing.JFrame {
     
     private User sessionUser;
     DB db = new DB();
-    private String itemID = null;
+    private int itemID = 0;
     private String barcode = null;
     private final JPanel panel = new JPanel();
-    public FinalizeScanItem(User user, String itemID, String action, String barcode) throws ClassNotFoundException, SQLException {
+    public FinalizeScanItem(User user, int itemID, String action, String barcode) throws ClassNotFoundException, SQLException {
         initComponents();
         this.sessionUser = user;
         this.itemID = itemID;
         this.barcode = barcode;
         this.setFields(itemID, action);
     }
-    public void setFields(String itemID, String action) throws ClassNotFoundException, SQLException{
+    public void setFields(int itemID, String action) throws ClassNotFoundException, SQLException{
         Stock stock = new Stock();
         System.out.println(itemID);
         stock = db.getStockItem(itemID);
@@ -257,7 +257,7 @@ public class FinalizeScanItem extends javax.swing.JFrame {
             else{
                 JOptionPane.showMessageDialog(panel, "System Error", "Error", JOptionPane.WARNING_MESSAGE);
                 this.setVisible(false);
-                ScanItem item = new ScanItem(this.sessionUser, this.itemID);
+                ScanItem item = new ScanItem(this.sessionUser, this.itemID, this.barcode);
                 item.setTitle("DSL Inventory System | Main");
                 item.pack();
                 item.setLocationRelativeTo(null);
@@ -284,7 +284,8 @@ public class FinalizeScanItem extends javax.swing.JFrame {
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
             this.setVisible(false);
-            ScanItem item = new ScanItem(this.sessionUser, barcode);
+            ListOfStockItems item = new ListOfStockItems(this.sessionUser, "Inventory", barcode);
+//            ScanItem item = new ScanItem(this.sessionUser, itemID);
             item.setTitle("DSL Inventory System | Main");
             item.pack();
             item.setLocationRelativeTo(null);
@@ -294,8 +295,6 @@ public class FinalizeScanItem extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(FinalizeScanItem.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
-            Logger.getLogger(FinalizeScanItem.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
             Logger.getLogger(FinalizeScanItem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnCancelActionPerformed

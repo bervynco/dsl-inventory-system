@@ -32,24 +32,26 @@ public class ScanItem extends javax.swing.JFrame {
      * Creates new form ScanItem
      */
     private static User sessionUser = null;
-    private String itemID = null;
+    private static String barcode = null;
+    private int itemID = 0;
     DB db = new DB();
     private final JPanel panel = new JPanel();
-    public ScanItem(User user, String itemID) throws ClassNotFoundException, SQLException, ParseException, IOException {
+    public ScanItem(User user, int itemID, String barcode) throws ClassNotFoundException, SQLException, ParseException, IOException {
         initComponents();
         this.sessionUser = user;
         this.itemID = itemID;
+        this.barcode = barcode;
         db.setLogStatus(this.sessionUser.getEmployeeID(), this.sessionUser.getFullName(), "Scan Item Page", "Visit");
         this.setFieldValues(itemID);
         this.setEditableFields(itemID);
     }
     
-    public void setEditableFields(String itemID) throws ClassNotFoundException, SQLException, IOException{
+    public void setEditableFields(int itemID) throws ClassNotFoundException, SQLException, IOException{
 //        Gson gson = new Gson();
 //        QRModel qr = gson.fromJson(itemID, QRModel.class);
         Item item = new Item();
-        String code = db.getItemIDFromBarcode(itemID);
-        item =  db.getItemFromCode(code);
+//        String code = db.getItemIDFromBarcode(itemID);
+        item =  db.getItemFromCode(itemID);
         lblQuantity.setText(Integer.toString(item.getQuantity()));
         lblThreshold.setText(Integer.toString(item.getThreshold()));
         lblItemID.setText(item.getItemID());
@@ -84,7 +86,7 @@ public class ScanItem extends javax.swing.JFrame {
         dpProductionDate.setDate(localDate);
     }
     
-    public void setFieldValues(String itemID) throws ClassNotFoundException, SQLException{
+    public void setFieldValues(int itemID) throws ClassNotFoundException, SQLException{
         Stock stock = new Stock();
         stock = db.getStockItem(itemID);
         lblItemID.setText(stock.getItemID());
@@ -616,7 +618,7 @@ public class ScanItem extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             this.setVisible(false);
-            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Transact", itemID);
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, Integer.parseInt(lblItemID.getText()), "Transact", barcode);
             item.setTitle("DSL Inventory System | Checkout");
             item.pack();
             item.setLocationRelativeTo(null);
@@ -632,7 +634,7 @@ public class ScanItem extends javax.swing.JFrame {
     private void btnReplenishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplenishActionPerformed
         try {
             this.setVisible(false);
-            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Replenish", itemID);
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, Integer.parseInt(lblItemID.getText()), "Replenish", barcode);
             item.setTitle("DSL Inventory System | Checkout");
             item.pack();
             item.setLocationRelativeTo(null);
@@ -647,7 +649,7 @@ public class ScanItem extends javax.swing.JFrame {
     private void btnDepleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepleteActionPerformed
         try {
             this.setVisible(false);
-            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, lblItemID.getText(), "Deplete", itemID);
+            FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, Integer.parseInt(lblItemID.getText()), "Deplete", barcode);
             item.setTitle("DSL Inventory System | Checkout");
             item.pack();
             item.setLocationRelativeTo(null);
@@ -662,12 +664,18 @@ public class ScanItem extends javax.swing.JFrame {
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
             this.setVisible(false);
-            Main main = new Main(this.sessionUser, "Inventory");
-            main.setTitle("DSL Inventory System | Main");
-            main.pack();
-            main.setLocationRelativeTo(null);
-            main.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            main.setVisible(true);
+            ListOfStockItems item = new ListOfStockItems(this.sessionUser, "Inventory", barcode);
+//            ScanItem item = new ScanItem(this.sessionUser, id);
+            item.setTitle("DSL Inventory System | Main");
+            item.pack();
+            item.setLocationRelativeTo(null);
+            item.setVisible(true);
+//            Main main = new Main(this.sessionUser, "Inventory");
+//            main.setTitle("DSL Inventory System | Main");
+//            main.pack();
+//            main.setLocationRelativeTo(null);
+//            main.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//            main.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(ScanItem.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
