@@ -410,7 +410,7 @@ public class DB {
     }
     public Stock getStockItem(int itemID) throws ClassNotFoundException, SQLException{
         Connection c = connect();
-        PreparedStatement ps = c.prepareStatement("Select * from stocks where itemID = ?");
+        PreparedStatement ps = c.prepareStatement("Select * from stocks where id = ?");
         ps.setInt(1, itemID);
         ResultSet rs = ps.executeQuery();
         Stock stock = new Stock();
@@ -426,14 +426,16 @@ public class DB {
         return stock;
     }
     
-    public String transactStock(User user, String itemID, String itemName, String action, int quantity, String note) throws ClassNotFoundException, SQLException {
+    public String transactStock(User user, String itemID, String itemName, String action, int quantity, String note, int identifier) throws ClassNotFoundException, SQLException {
+        System.out.println("ITEM ID in TRANSACT STOCK: " + itemID);
         Connection c = connect();
-        PreparedStatement psQuantity = c.prepareStatement("Select quantity, threshold from stocks where itemID = ?");
-        psQuantity.setString(1, itemID);
+        PreparedStatement psQuantity = c.prepareStatement("Select id, quantity, threshold from stocks where id = ?");
+        psQuantity.setInt(1, identifier);
         ResultSet rs = psQuantity.executeQuery();
         rs.first();
-        int overallQuantity = rs.getInt(1);
-        int threshold = rs.getInt(2);
+        int id = rs.getInt(1);
+        int overallQuantity = rs.getInt(2);
+        int threshold = rs.getInt(3);
         int updateQuantity = 0;
         
         
@@ -462,9 +464,9 @@ public class DB {
         else;
         
         if(!action.equals("Replenish")){
-            PreparedStatement ps = c.prepareStatement("UPDATE stocks SET quantity = ? WHERE itemID = ? ");
+            PreparedStatement ps = c.prepareStatement("UPDATE stocks SET quantity = ? WHERE id = ? ");
             ps.setInt(1, updateQuantity);
-            ps.setString(2, itemID);
+            ps.setInt(2, identifier);
             ps.executeUpdate();
         }
         
@@ -478,6 +480,12 @@ public class DB {
         psTransact.setString(7, note);
         
         int rows = psTransact.executeUpdate();
+        
+        if(updateQuantity == 0){
+            PreparedStatement psDelete = c.prepareStatement("DELETE from stocks where id = ?");
+            psDelete.setInt(1, identifier);
+            psDelete.executeUpdate();
+        }
         c.close();
         if(rows > 0){
             return "Successful";

@@ -61,19 +61,23 @@ public class FinalizeScanItem extends javax.swing.JFrame {
     private User sessionUser;
     DB db = new DB();
     private int itemID = 0;
+    private static int identifier = 0;
     private String barcode = null;
     private final JPanel panel = new JPanel();
     public FinalizeScanItem(User user, int itemID, String action, String barcode) throws ClassNotFoundException, SQLException {
         initComponents();
         this.sessionUser = user;
-        this.itemID = itemID;
+        this.identifier = itemID;
         this.barcode = barcode;
         this.setFields(itemID, action);
     }
     public void setFields(int itemID, String action) throws ClassNotFoundException, SQLException{
         Stock stock = new Stock();
-        System.out.println(itemID);
         stock = db.getStockItem(itemID);
+        if(action == "Deplete"){
+            txtQuantity.setText(Integer.toString(stock.getQuantity()));
+            txtQuantity.setEditable(false);
+        }
         lblItemID.setText(stock.getItemID());
         lblItemName.setText(stock.getItemName());
         comboType.setSelectedItem(action);
@@ -241,7 +245,7 @@ public class FinalizeScanItem extends javax.swing.JFrame {
             System.out.println(itemID);
             System.out.println(itemName);
             System.out.println(note);
-            String result = db.transactStock(this.sessionUser, itemID, itemName, action, quantity, note);
+            String result = db.transactStock(this.sessionUser, itemID, itemName, action, quantity, note, identifier);
             
             if(result.equals("Successful")){
                 JOptionPane.showMessageDialog(panel, "Successful Transaction", "Success", JOptionPane.INFORMATION_MESSAGE);
