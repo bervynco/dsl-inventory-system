@@ -666,8 +666,12 @@ public class DB {
         PreparedStatement ps = c.prepareStatement("Delete from items where item_id = ?");
         ps.setInt(1, itemID);
         int affectedRows = ps.executeUpdate();
-        c.close();
+        
         if(affectedRows != 0){
+            PreparedStatement psStocks = c.prepareStatement("Delete from stocks where itemID = ?");
+            psStocks.setInt(1, itemID);
+            int affectedStocks = psStocks.executeUpdate();
+            c.close();
             return "Successful";
         }
         else{
