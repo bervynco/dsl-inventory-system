@@ -406,11 +406,12 @@ public class DB {
     
     public String transactStock(User user, String itemID, String itemName, String action, int quantity, String note) throws ClassNotFoundException, SQLException {
         Connection c = connect();
-        PreparedStatement psQuantity = c.prepareStatement("Select quantity from stocks where itemID = ?");
+        PreparedStatement psQuantity = c.prepareStatement("Select quantity, threshold from stocks where itemID = ?");
         psQuantity.setString(1, itemID);
         ResultSet rs = psQuantity.executeQuery();
         rs.first();
         int overallQuantity = rs.getInt(1);
+        int threshold = rs.getInt(2);
         int updateQuantity = 0;
         
         
@@ -418,10 +419,14 @@ public class DB {
             java.util.Date date = new java.util.Date();
             java.sql.Date sqlDate = new java.sql.Date(date.getTime()); 
             updateQuantity = overallQuantity + quantity;
-            PreparedStatement ps1 = c.prepareStatement("UPDATE stocks SET replenishDate = ? WHERE itemID = ? ");
-            ps1.setDate(1, sqlDate);
-            ps1.setString(2, itemID);
-            ps1.executeUpdate();
+            PreparedStatement psReplenish = c.prepareStatement("INSERT INTO stocks(itemID, itemName, quantity, threshold, status, replenishDate) VALUES(?,?,?,?,?,?)");
+            psReplenish.setString(1, itemID);
+            psReplenish.setString(2, itemName);
+            psReplenish.setInt(3, quantity);
+            psReplenish.setInt(4, threshold);
+            psReplenish.setInt(5, 0);
+            psReplenish.setDate(6, sqlDate);
+            int rows = psReplenish.executeUpdate();
         }
         else if(action.equals("Deplete")){
             updateQuantity = 0;
@@ -433,12 +438,14 @@ public class DB {
             updateQuantity = overallQuantity - quantity;
         }
         else;
-        PreparedStatement ps = c.prepareStatement("UPDATE stocks SET quantity = ? WHERE itemID = ? ");
-        ps.setInt(1, updateQuantity);
-        ps.setString(2, itemID);
-        ps.executeUpdate();
         
-        //id, employeeID, employeeName, itemID, item, quantity, type, note, transactionDate
+        if(!action.equals("Replenish")){
+            PreparedStatement ps = c.prepareStatement("UPDATE stocks SET quantity = ? WHERE itemID = ? ");
+            ps.setInt(1, updateQuantity);
+            ps.setString(2, itemID);
+            ps.executeUpdate();
+        }
+        
         PreparedStatement psTransact = c.prepareStatement("INSERT INTO transactions(employeeID, employeeName, itemID, item, quantity, type, note) VALUES(?,?,?,?,?,?,?)");
         psTransact.setInt(1, user.getEmployeeID());
         psTransact.setString(2, user.getFullName());

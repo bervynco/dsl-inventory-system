@@ -283,8 +283,6 @@ public class FinalizeScanItem extends javax.swing.JFrame {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
-            System.out.println("LBL ITEM: " + lblItemID.getText());
-            
             this.setVisible(false);
             ScanItem item = new ScanItem(this.sessionUser, barcode);
             item.setTitle("DSL Inventory System | Main");
