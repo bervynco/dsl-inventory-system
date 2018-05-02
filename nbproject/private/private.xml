@@ -4,10 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/model/DB.java</file>
-            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/model/QRModel.java</file>
-            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/model/Item.java</file>
             <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/GenerateQRCode.java</file>
-            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/ItemList.java</file>
+            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/ScanPage.java</file>
+            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/ScanItem.java</file>
+            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/ListOfStockItems.java</file>
+            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/Main.java</file>
+            <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/FinalizeScanItem.java</file>
             <file>file:/C:/Users/L%20R%20E/Documents/NetBeansProjects/Inventory/src/inventory/AddNewItem.java</file>
         </group>
     </open-files>

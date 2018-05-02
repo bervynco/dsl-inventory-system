@@ -42,6 +42,8 @@ public class AddNewItem extends javax.swing.JFrame {
         itemNo = db.generateItemNo();
         System.out.println("Item No: " + itemNo);
         lblItemNo.setText(itemNo);
+        txtQuantity.setText("0");
+        txtThreshold.setText("0");
     }
 
     /**
@@ -99,8 +101,6 @@ public class AddNewItem extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
         jLabel29 = new javax.swing.JLabel();
         lblItemNo = new javax.swing.JLabel();
 
@@ -196,12 +196,6 @@ public class AddNewItem extends javax.swing.JFrame {
         jLabel19.setForeground(new java.awt.Color(255, 0, 0));
         jLabel19.setText("*");
 
-        jLabel26.setForeground(new java.awt.Color(255, 0, 0));
-        jLabel26.setText("*");
-
-        jLabel28.setForeground(new java.awt.Color(255, 0, 0));
-        jLabel28.setText("*");
-
         jLabel29.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel29.setText("Product ID:");
 
@@ -222,22 +216,16 @@ public class AddNewItem extends javax.swing.JFrame {
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel20)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(jLabel24)
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addComponent(jLabel6)
-                                                            .addComponent(jLabel21))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addGap(0, 46, Short.MAX_VALUE))
+                                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(jLabel6)
+                                                        .addComponent(jLabel21)))
+                                                .addGap(0, 64, Short.MAX_VALUE))
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
                                                 .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -276,14 +264,18 @@ public class AddNewItem extends javax.swing.JFrame {
                                 .addGap(87, 87, 87))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel20)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel29))
-                                .addGap(20, 20, 20)
-                                .addComponent(lblItemNo, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel7)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jLabel29))
+                                        .addGap(20, 20, 20)
+                                        .addComponent(lblItemNo, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,9 +305,7 @@ public class AddNewItem extends javax.swing.JFrame {
                                     .addComponent(jLabel8))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(1, 1, 1)
-                                        .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(txtThreshold)
                                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -351,8 +341,7 @@ public class AddNewItem extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel27)
-                            .addComponent(txtThreshold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel28))
+                            .addComponent(txtThreshold, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel25)
@@ -421,7 +410,6 @@ public class AddNewItem extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel26)
                             .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -478,7 +466,7 @@ public class AddNewItem extends javax.swing.JFrame {
 //            dpProductionDate.setDate(now.getYear(), now.getMonth(), now.getDayOfMonth());
 
             int quantity = Integer.parseInt(txtQuantity.getText());
-            if(!productName.equals(null) && !ipRate.equals(null) && quantity != 0 && threshold != 0 && !productionDate.equals(null)){
+            if(!productName.equals(null) && !ipRate.equals(null) && !productionDate.equals(null)){
                 do {
                     barcodeIdentifier = this.generateRandomBarcodeIdentifier();
                     duplicateBarcodeStatus = db.determineDuplicateBarcode(barcodeIdentifier);
@@ -494,8 +482,8 @@ public class AddNewItem extends javax.swing.JFrame {
                 db.setLogStatus(sessionUser.getEmployeeID(), sessionUser.getFullName(), "Add Item", "Save");
                 GenerateQRCode qr = new GenerateQRCode();
                 
-                qrStatus = qr.generateQRCode(itemNo, barcodeIdentifier);
-                barcodeStatus = qr.generateBarcode(itemNo, barcodeIdentifier);
+                qrStatus = qr.generateQRCode(itemNo, productName, barcodeIdentifier);
+                barcodeStatus = qr.generateBarcode(itemNo, productName, barcodeIdentifier);
                 if(qrStatus.equals("Successful") && barcodeStatus.equals("Successful")){
                     JOptionPane.showMessageDialog(panel, "QR Code generated at C:/DSL QR Codes/"+itemNo, "Success", JOptionPane.INFORMATION_MESSAGE);
                     JOptionPane.showMessageDialog(panel, "Barcode generated at C:/DSL Barcodes/"+itemNo, "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -579,9 +567,7 @@ public class AddNewItem extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;

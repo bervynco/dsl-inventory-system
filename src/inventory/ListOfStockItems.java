@@ -34,8 +34,10 @@ public class ListOfStockItems extends javax.swing.JFrame {
     private static String currentMenu = null;
     private static String barcode = null;
     private static User sessionUser = null;
+    private static String searchParams = null;
+    private static String action = null;
     DB db = new DB();
-    public DefaultTableModel FillTable(String barcode) throws SQLException, ClassNotFoundException, ParseException{
+    public DefaultTableModel FillTable(String barcode, String searchParams) throws SQLException, ClassNotFoundException, ParseException{
         DefaultTableModel model = new DefaultTableModel();
         String itemName = null;
         model.setRowCount(0);
@@ -43,7 +45,14 @@ public class ListOfStockItems extends javax.swing.JFrame {
         
         List<Stock> items = new ArrayList<Stock>();
 //        lblStockName.setText(items.get().getItemName());
-        items = db.getAllStocksFromBarcode(barcode);
+
+        if(searchParams.equals("ID")){
+            items = db.getAllStocksFromBarcode(barcode);
+        }
+        else{
+            items = db.getAllStocksFromName(barcode);
+        }
+        
         model.addColumn("Item ID");
         model.addColumn("Item ID");
         model.addColumn("Item Name");
@@ -74,13 +83,22 @@ public class ListOfStockItems extends javax.swing.JFrame {
         
         return model;
     }
-    public ListOfStockItems(User user, String currentMenu, String id) throws SQLException, ClassNotFoundException, ParseException {
+    public ListOfStockItems(User user, String currentMenu, String id, String searchParams, String action) throws SQLException, ClassNotFoundException, ParseException {
         initComponents();
         this.barcode = id;
-        DefaultTableModel model = this.FillTable(id);
+        this.searchParams = searchParams;
+        DefaultTableModel model = this.FillTable(id, searchParams);
         this.currentMenu = currentMenu;
         this.sessionUser = user;
+        this.action = action;
         stockTableList.setModel(model);
+        if(searchParams == "ID"){
+            lblListOfStocksHeader.setText("List of Stocks for");
+        }
+        else {
+            lblListOfStocksHeader.setText("Search Results");
+            lblStockName.setText(null);
+        }
         db.setLogStatus(this.sessionUser.getEmployeeID(), this.sessionUser.getFullName(), "Main Menu", "Visit");
     }
 
@@ -95,7 +113,7 @@ public class ListOfStockItems extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         stockTableList = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
+        lblListOfStocksHeader = new javax.swing.JLabel();
         lblStockName = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -151,8 +169,8 @@ public class ListOfStockItems extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(stockTableList);
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jLabel1.setText("List of Stocks for: ");
+        lblListOfStocksHeader.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        lblListOfStocksHeader.setText("List of Stocks for: ");
 
         lblStockName.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
 
@@ -177,7 +195,7 @@ public class ListOfStockItems extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(lblListOfStocksHeader)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblStockName, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 188, Short.MAX_VALUE)
@@ -196,7 +214,7 @@ public class ListOfStockItems extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblListOfStocksHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblStockName, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(31, 31, 31)
@@ -207,8 +225,8 @@ public class ListOfStockItems extends javax.swing.JFrame {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(89, 89, 89)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
 
         pack();
@@ -219,11 +237,36 @@ public class ListOfStockItems extends javax.swing.JFrame {
             int row = stockTableList.rowAtPoint(evt.getPoint());
             int id = (int) stockTableList.getValueAt(row, 0);
             this.setVisible(false);
-            ScanItem item = new ScanItem(this.sessionUser, id, barcode);
-            item.setTitle("DSL Inventory System | Main");
-            item.pack();
-            item.setLocationRelativeTo(null);
-            item.setVisible(true);
+            if(action == "Damage"){
+                FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, id, "Damage", barcode, searchParams, action);
+                item.setTitle("DSL Inventory System | Finalize Scan Item");
+                item.pack();
+                item.setLocationRelativeTo(null);
+                item.setVisible(true);
+            }
+            else if(action == "Replenish"){
+                FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, id, "Replenish", barcode, searchParams, action);
+                item.setTitle("DSL Inventory System | Finalize Scan Item");
+                item.pack();
+                item.setLocationRelativeTo(null);
+                item.setVisible(true);
+            }
+            else if(action == "Transact"){
+                FinalizeScanItem item = new FinalizeScanItem(this.sessionUser, id, "Transact", barcode, searchParams, action);
+                item.setTitle("DSL Inventory System | Finalize Scan Item");
+                item.pack();
+                item.setLocationRelativeTo(null);
+                item.setVisible(true);
+            }
+            else{
+                
+                ScanItem item = new ScanItem(this.sessionUser, id, barcode, searchParams, action);
+                item.setTitle("DSL Inventory System | Main");
+                item.pack();
+                item.setLocationRelativeTo(null);
+                item.setVisible(true);
+            }
+            
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ListOfStockItems.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -259,9 +302,9 @@ public class ListOfStockItems extends javax.swing.JFrame {
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblListOfStocksHeader;
     private javax.swing.JLabel lblStockName;
     private javax.swing.JTable stockTableList;
     // End of variables declaration//GEN-END:variables

@@ -19,6 +19,7 @@ public class Stock {
     private int threshold;
     private int status;
     private Timestamp replenishDate;
+    private String colorTemp;
 
     public int getId() {
         return id;
@@ -74,6 +75,14 @@ public class Stock {
 
     public void setReplenishDate(Timestamp replenishDate) {
         this.replenishDate = replenishDate;
+    }
+
+    public String getColorTemp() {
+        return colorTemp;
+    }
+
+    public void setColorTemp(String colorTemp) {
+        this.colorTemp = colorTemp;
     }
     
     

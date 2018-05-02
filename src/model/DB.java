@@ -33,7 +33,7 @@ public class DB {
     private static String host = "localhost";
     private static String port = "3306";
     private static String url = "jdbc:mysql://" + host + ":" + port + "/dsl_inventory_system";
-//    
+    
 //    private static String user = "dsl";
 //    private static String pass = "DslDatabase";
 //    private static String host = "localhost";
@@ -321,7 +321,7 @@ public class DB {
         
         int rows = ps.executeUpdate();
         if(rows > 0){
-           String status = this.addStockItem(itemNo, productName, quantity, threshold);
+           String status = this.addStockItem(itemNo, productName, quantity, threshold, barcodeIdentifier);
            return status;
         }
         else{
@@ -329,13 +329,14 @@ public class DB {
         }
     }
     
-    public static String addStockItem(String itemID, String itemName, int quantity, int threshold) throws ClassNotFoundException, SQLException{
+    public static String addStockItem(String itemID, String itemName, int quantity, int threshold, long barcodeIdentifier) throws ClassNotFoundException, SQLException{
          Connection c = connect();
-         PreparedStatement ps = c.prepareStatement("INSERT INTO stocks(itemID, itemName, quantity, threshold) VALUES (?,?,?,?)");
+         PreparedStatement ps = c.prepareStatement("INSERT INTO stocks(itemID, itemName, quantity, threshold, barcode) VALUES (?,?,?,?,?)");
          ps.setString(1, itemID);
          ps.setString(2, itemName);
          ps.setInt(3, quantity);
          ps.setInt(4, threshold);
+         ps.setLong(5, barcodeIdentifier);
          
          int rows = ps.executeUpdate();
          if(rows > 0){
@@ -368,8 +369,8 @@ public class DB {
         Connection c = connect();
         
         ArrayList<Stock> stocks = new ArrayList<Stock>();
-        PreparedStatement ps = c.prepareStatement("Select id, itemID, itemName, quantity, threshold,"+
-                "status from stocks");
+        PreparedStatement ps = c.prepareStatement("Select a.id, a.itemID, a.itemName, a.quantity, a.threshold,"+
+                "a.status, b.color_temp from stocks a, items b where a.itemID = b.item_id");
         
         ResultSet rs = ps.executeQuery();
         
@@ -381,7 +382,7 @@ public class DB {
             stock.setQuantity(rs.getInt(4));
             stock.setThreshold(rs.getInt(5));
             stock.setStatus(rs.getInt(6));
-            
+            stock.setColorTemp(rs.getString(7));
             stocks.add(stock);
         }
         return stocks;
@@ -391,7 +392,7 @@ public class DB {
         
         ArrayList<Stock> stocks = new ArrayList<Stock>();
         PreparedStatement ps = c.prepareStatement("Select a.id, a.itemID, a.itemName, a.quantity, a.threshold,"+
-                "a.status from stocks a, items b where b.barcode = ? and b.item_id = a.itemID");
+                "a.status from stocks a, items b where a.barcode = ? and b.item_id = a.itemID");
         ps.setLong(1, Long.parseLong(barcode));
         ResultSet rs = ps.executeQuery();
         
@@ -408,6 +409,30 @@ public class DB {
         }
         return stocks;
     }
+    
+    public List<Stock> getAllStocksFromName(String barcode) throws ClassNotFoundException, SQLException{
+        Connection c = connect();
+        
+        ArrayList<Stock> stocks = new ArrayList<Stock>();
+        PreparedStatement ps = c.prepareStatement("Select a.id, a.itemID, a.itemName, a.quantity, a.threshold,"+
+                "a.status from stocks a, items b where b.product_name LIKE ? and b.item_id = a.itemID");
+        ps.setString(1, '%' +barcode+ '%');
+        ResultSet rs = ps.executeQuery();
+        
+        while(rs.next()){
+            Stock stock = new Stock();
+            stock.setId(rs.getInt(1));
+            stock.setItemID(rs.getString(2));
+            stock.setItemName(rs.getString(3));
+            stock.setQuantity(rs.getInt(4));
+            stock.setThreshold(rs.getInt(5));
+            stock.setStatus(rs.getInt(6));
+            
+            stocks.add(stock);
+        }
+        return stocks;
+    }
+    
     public Stock getStockItem(int itemID) throws ClassNotFoundException, SQLException{
         Connection c = connect();
         PreparedStatement ps = c.prepareStatement("Select * from stocks where id = ?");
@@ -426,8 +451,8 @@ public class DB {
         return stock;
     }
     
-    public String transactStock(User user, String itemID, String itemName, String action, int quantity, String note, int identifier) throws ClassNotFoundException, SQLException {
-        System.out.println("ITEM ID in TRANSACT STOCK: " + itemID);
+    public String transactStock(User user, String itemID, String itemName, String action, int quantity, String note, int identifier, long barcodeIdentifier) throws ClassNotFoundException, SQLException {
+        
         Connection c = connect();
         PreparedStatement psQuantity = c.prepareStatement("Select id, quantity, threshold from stocks where id = ?");
         psQuantity.setInt(1, identifier);
@@ -437,19 +462,20 @@ public class DB {
         int overallQuantity = rs.getInt(2);
         int threshold = rs.getInt(3);
         int updateQuantity = 0;
-        
+        String successFlag = "Successful";
         
         if(action.equals("Replenish")){
             java.util.Date date = new java.util.Date();
             java.sql.Date sqlDate = new java.sql.Date(date.getTime()); 
             updateQuantity = overallQuantity + quantity;
-            PreparedStatement psReplenish = c.prepareStatement("INSERT INTO stocks(itemID, itemName, quantity, threshold, status, replenishDate) VALUES(?,?,?,?,?,?)");
+            PreparedStatement psReplenish = c.prepareStatement("INSERT INTO stocks(itemID, itemName, quantity, threshold, status, replenishDate, barcode) VALUES(?,?,?,?,?,?,?)");
             psReplenish.setString(1, itemID);
             psReplenish.setString(2, itemName);
             psReplenish.setInt(3, quantity);
             psReplenish.setInt(4, threshold);
             psReplenish.setInt(5, 0);
             psReplenish.setDate(6, sqlDate);
+            psReplenish.setLong(7, barcodeIdentifier);
             int rows = psReplenish.executeUpdate();
         }
         else if(action.equals("Deplete")){
@@ -463,37 +489,39 @@ public class DB {
         }
         else;
         
-        if(!action.equals("Replenish")){
-            PreparedStatement ps = c.prepareStatement("UPDATE stocks SET quantity = ? WHERE id = ? ");
-            ps.setInt(1, updateQuantity);
-            ps.setInt(2, identifier);
-            ps.executeUpdate();
+        
+        
+        if(updateQuantity >= 0){
+            if(!action.equals("Replenish")){
+                PreparedStatement ps = c.prepareStatement("UPDATE stocks SET quantity = ? WHERE id = ? ");
+                ps.setInt(1, updateQuantity);
+                ps.setInt(2, identifier);
+                ps.executeUpdate();
+            }
+            PreparedStatement psTransact = c.prepareStatement("INSERT INTO transactions(employeeID, employeeName, itemID, item, quantity, type, note) VALUES(?,?,?,?,?,?,?)");
+            psTransact.setInt(1, user.getEmployeeID());
+            psTransact.setString(2, user.getFullName());
+            psTransact.setString(3, itemID);
+            psTransact.setString(4, itemName);
+            psTransact.setInt(5, quantity);
+            psTransact.setString(6, action);
+            psTransact.setString(7, note);
+
+            int rows = psTransact.executeUpdate();
+
+            if(updateQuantity == 0){
+                PreparedStatement psDelete = c.prepareStatement("DELETE from stocks where id = ?");
+                psDelete.setInt(1, identifier);
+                psDelete.executeUpdate();
+            }
+        }
+        else {
+            successFlag = "Exceed Count";
         }
         
-        PreparedStatement psTransact = c.prepareStatement("INSERT INTO transactions(employeeID, employeeName, itemID, item, quantity, type, note) VALUES(?,?,?,?,?,?,?)");
-        psTransact.setInt(1, user.getEmployeeID());
-        psTransact.setString(2, user.getFullName());
-        psTransact.setString(3, itemID);
-        psTransact.setString(4, itemName);
-        psTransact.setInt(5, quantity);
-        psTransact.setString(6, action);
-        psTransact.setString(7, note);
-        
-        int rows = psTransact.executeUpdate();
-        
-        if(updateQuantity == 0){
-            PreparedStatement psDelete = c.prepareStatement("DELETE from stocks where id = ?");
-            psDelete.setInt(1, identifier);
-            psDelete.executeUpdate();
-        }
         c.close();
-        if(rows > 0){
-            return "Successful";
-        }
-        else{
-            return "Failed";
-        }
-        
+        return successFlag;
+
     }
     
     public static List<Item> getItems() throws ClassNotFoundException, SQLException{

@@ -28,15 +28,18 @@ public class ScanPage extends javax.swing.JFrame {
     private static User sessionUser = null;
     private static Main main = null;
     private static String currentMenu = null;
-    public ScanPage(User user, String currentMenu) throws ClassNotFoundException, SQLException, ParseException {
+    private static String action = null;
+    public ScanPage(User user, String currentMenu, String action) throws ClassNotFoundException, SQLException, ParseException {
         initComponents();
         this.sessionUser = user;
+        this.action = action;
         db.setLogStatus(this.sessionUser.getEmployeeID(), this.sessionUser.getFullName(), "Scan Item Page", "Visit");
     }
-    public ScanPage(User user, Main main, String currentMenu) throws ClassNotFoundException, SQLException, ParseException {
+    public ScanPage(User user, Main main, String currentMenu, String action) throws ClassNotFoundException, SQLException, ParseException {
         initComponents();
         this.sessionUser = user;
         this.main = main;
+        this.action = action;
         db.setLogStatus(this.sessionUser.getEmployeeID(), this.sessionUser.getFullName(), "Scan Item Page", "Visit");
     }
     /**
@@ -143,12 +146,20 @@ public class ScanPage extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             String id = txtScan.getText();
+            String searchParams = "ID";
+            try{
+                long parsedString = Long.parseLong(id);
+
+            }catch(Exception ex){
+                searchParams = "Name";
+            }
             this.setVisible(false);
             this.main.setVisible(false);
-            ListOfStockItems item = new ListOfStockItems(this.sessionUser, this.currentMenu, id);
+            ListOfStockItems item = new ListOfStockItems(this.sessionUser, this.currentMenu, id, searchParams, action);
 //            ScanItem item = new ScanItem(this.sessionUser, id);
             item.setTitle("DSL Inventory System | Main");
             item.pack();
+            item.setExtendedState(JFrame.MAXIMIZED_BOTH);
             item.setLocationRelativeTo(null);
             item.setVisible(true);
         } catch (ClassNotFoundException ex) {

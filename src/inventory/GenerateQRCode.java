@@ -52,8 +52,8 @@ import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 
 public class GenerateQRCode {
     
-    public static String generateQRCode(String itemNo, long barcodeIdentifier) throws IOException, WriterException{
-        String filePathQr = "C:/DSL QR Codes/" + itemNo +".png";
+    public static String generateQRCode(String itemNo, String itemName, long barcodeIdentifier) throws IOException, WriterException{
+        String filePathQr = "C:/DSL QR Codes/" + itemName + "-" + itemNo +".png";
         int size = 250;
         String fileType = "png";
         Gson gson = new Gson();
@@ -91,8 +91,8 @@ public class GenerateQRCode {
         return "Successful";
     }
     
-    public static String generateBarcode(String itemNo, long barcodeIdentifier) throws WriterException, IOException, ConfigurationException, BarcodeException{
-        String filePathBarcode = "C:/DSL Barcodes/" + itemNo + ".png";
+    public static String generateBarcode(String itemNo, String itemName, long barcodeIdentifier) throws WriterException, IOException, ConfigurationException, BarcodeException{
+        String filePathBarcode = "C:/DSL Barcodes/" + itemName + "-" + itemNo +".png";
         BarcodeUtil util = BarcodeUtil.getInstance();
         BarcodeGenerator gen = util.createBarcodeGenerator(buildCfg("code128"));
 

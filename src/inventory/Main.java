@@ -79,6 +79,9 @@ public class Main extends javax.swing.JFrame {
     public void setButtonVisibility(){
         btnAdd.setLabel("Add");
         btnScan.setLabel("Scan");
+        btnDamage.setVisible(false);
+        btnReplenish.setVisible(false);
+        btnTransact.setVisible(false);
         if(this.currentMenu.equals("Items")){
             btnAdd.setVisible(true);
             btnScan.setVisible(true);
@@ -94,6 +97,9 @@ public class Main extends javax.swing.JFrame {
         else if(this.currentMenu.equals("Inventory")){
             btnAdd.setVisible(true);
             btnScan.setVisible(true);
+            btnReplenish.setVisible(true);
+            btnTransact.setVisible(true);
+            btnDamage.setVisible(true);
         }
         else if(this.currentMenu.equals("Logs")){
             btnAdd.setVisible(false);
@@ -258,7 +264,7 @@ public class Main extends javax.swing.JFrame {
             model.addColumn("Quantity");
             model.addColumn("Threshold");
             model.addColumn("Status");
-            
+            model.addColumn("Color Temp");
             for(int i = 0; i < items.size(); i++){
                 this.itemStatus = "Good";
                 if(items.get(i).getStatus() != 0){
@@ -270,7 +276,8 @@ public class Main extends javax.swing.JFrame {
                     items.get(i).getItemName(),
                     items.get(i).getQuantity(),
                     items.get(i).getThreshold(),
-                    this.itemStatus
+                    this.itemStatus,
+                    items.get(i).getColorTemp()
                 };
                 model.addRow(rowData);
             }
@@ -316,6 +323,9 @@ public class Main extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         employeeName = new javax.swing.JLabel();
         btnAdd = new java.awt.Button();
+        btnReplenish = new java.awt.Button();
+        btnTransact = new java.awt.Button();
+        btnDamage = new java.awt.Button();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuTransactions = new javax.swing.JMenu();
         menuUsers = new javax.swing.JMenu();
@@ -373,6 +383,7 @@ public class Main extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tableList.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
         tableList.setRowHeight(25);
         tableList.setRowMargin(5);
         tableList.setSelectionBackground(new java.awt.Color(173, 216, 230));
@@ -397,6 +408,33 @@ public class Main extends javax.swing.JFrame {
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
+            }
+        });
+
+        btnReplenish.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        btnReplenish.setLabel("Replenish");
+        btnReplenish.setName(""); // NOI18N
+        btnReplenish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReplenishActionPerformed(evt);
+            }
+        });
+
+        btnTransact.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        btnTransact.setLabel("Transact");
+        btnTransact.setName(""); // NOI18N
+        btnTransact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransactActionPerformed(evt);
+            }
+        });
+
+        btnDamage.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        btnDamage.setLabel("Damage");
+        btnDamage.setName(""); // NOI18N
+        btnDamage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDamageActionPerformed(evt);
             }
         });
 
@@ -466,21 +504,26 @@ public class Main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1202, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(16, 16, 16)
-                        .addComponent(btnScan, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(employeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addContainerGap())
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1202, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(employeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 553, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(16, 16, 16)
+                                .addComponent(btnScan, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnReplenish, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnTransact, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnDamage, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -490,14 +533,19 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(employeeName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnScan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnScan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnTransact, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnReplenish, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDamage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(26, 26, 26)
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 569, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                .addGap(39, 39, 39))
         );
 
         pack();
@@ -574,7 +622,7 @@ public class Main extends javax.swing.JFrame {
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
         try {
-            ScanPage scan = new ScanPage(this.sessionUser, this, this.currentMenu);
+            ScanPage scan = new ScanPage(this.sessionUser, this, this.currentMenu, "Scan");
             scan.setTitle("DSL Inventory System | Scan");
             scan.pack();
             scan.setLocationRelativeTo(null);
@@ -729,12 +777,67 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_menuLogsMouseClicked
 
+    private void btnReplenishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReplenishActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.setVisible(false);
+            ScanPage scan = new ScanPage(this.sessionUser, this, this.currentMenu, "Replenish");
+            scan.setTitle("DSL Inventory System | Scan");
+            scan.pack();
+            scan.setLocationRelativeTo(null);
+            scan.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnReplenishActionPerformed
+
+    private void btnTransactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransactActionPerformed
+        try {
+            this.setVisible(false);
+            ScanPage scan = new ScanPage(this.sessionUser, this, this.currentMenu, "Transact");
+            scan.setTitle("DSL Inventory System | Scan");
+            scan.pack();
+            scan.setLocationRelativeTo(null);
+            scan.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnTransactActionPerformed
+
+    private void btnDamageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDamageActionPerformed
+        try {
+            this.setVisible(false);
+            ScanPage scan = new ScanPage(this.sessionUser, this, this.currentMenu, "Damage");
+            scan.setTitle("DSL Inventory System | Scan");
+            scan.pack();
+            scan.setLocationRelativeTo(null);
+            scan.setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDamageActionPerformed
+
     /**
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button btnAdd;
+    private java.awt.Button btnDamage;
+    private java.awt.Button btnReplenish;
     private java.awt.Button btnScan;
+    private java.awt.Button btnTransact;
     private javax.swing.JLabel employeeName;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
